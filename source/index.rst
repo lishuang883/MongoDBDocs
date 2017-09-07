@@ -21,7 +21,7 @@ Contents:
 
 .. toctree::
    :maxdepth: 2
-   :numbered: 2	
+   	
    
    list1 
    list2  
