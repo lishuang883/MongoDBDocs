@@ -41,6 +41,7 @@ MongoDB是面向集合（collection）的，集合中又包含多个文档（doc
 数据结构
 ++++++++
 MongoDB对数据结构的支持非常灵活，从横向到纵向的支持都很好，比如下面的数据都能存储在同一个集合中：
+
  * {“name”: “wangwu”, “age”: 25}
  * {“name”: “lisi”}
  * {“state”: “激活”, “remark”: “无”}
