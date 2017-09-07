@@ -1,0 +1,244 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>引用和嵌入 &#8212; Python 1.0.0 documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="文件存入" href="list7.html" />
+    <link rel="prev" title="排序、索引、聚合" href="list5.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="id1">
+<h1>引用和嵌入<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
+<img alt="_images/embed.jpg" src="_images/embed.jpg" />
+<p>图一</p>
+<img alt="_images/ref.jpg" src="_images/ref.jpg" />
+<p>图二</p>
+<p>图一为嵌入，将address集合嵌入一个集合中
+图二为引用(ref)，$ref为被引用的集合名，$id为id</p>
+<img alt="_images/MongoDB.jpg" src="_images/MongoDB.jpg" />
+<img alt="_images/mysql.jpg" src="_images/mysql.jpg" />
+<p>我们有两个Collection，student和coureses。第一张图就是MongoDB表设计，学生Collection中包含一个嵌入的address文档和coursesCollection有引用关系的score文档。第二张图为关系型数据库的建表模式。</p>
+<div class="section" id="mongodb">
+<h2>关系型与mongoDB比较<a class="headerlink" href="#mongodb" title="Permalink to this headline">¶</a></h2>
+<p>student与score是一对多的关系，其scores字段就是一个BSON，该BSON可以只有一个for_course，也可以有两个、三个、任意个for_course，其固有的模式自由特性使得它可以将score包含在内而无需另建一个score集合。</p>
+<p>对于与student为一对一关系的address表也可以直接合入student，无需担心address的扩展性，当以后需要给address新增一个province字段，直接在数据插入时加上这个值即可。</p>
+<p>对于与student成多对多关系course表，为了减少数据冗余，可以将course建立为一个集合，同关系型的数据库设计中类似。</p>
+</div>
+<div class="section" id="id2">
+<h2>mongoDB嵌入与引用比较<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<p>在Mongo数据库设计中关键的一句话是“比起嵌入到其他Collection中做一个子对象，每个对象值得拥有自己的Collection吗？”。在关系数据库中。每个有兴趣的子项目通常都会分离出来单独设计一张表（除非为了性能的考虑）。而在Mongo中，是不建议使用这种设计的，嵌入式的对象更高效。数据是即时同步到硬盘上的，客户端与服务器不必要在数据库上做周转。所以通常来说问题就是“为什么不使用嵌入式对象呢？”</p>
+</div>
+<div class="section" id="addressscores">
+<h2>当查询address时比查询scores快<a class="headerlink" href="#addressscores" title="Permalink to this headline">¶</a></h2>
+<p>因为address是嵌入式对象，所以这个操作通常是很快速的，如果sdudent被放在内存中，那address也通常在内存中。而for_course是引用的，查询scores还需要再去查询for_cours的id。</p>
+</div>
+<div class="section" id="id3">
+<h2>那我们什么时候需要嵌入，什么时候引用？<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic simple">
+<li>顶级对象，一般都有自己的Collection</li>
+<li>线性细节对象，一般作为嵌入式的</li>
+<li>一个对象和另一个对象是包含关系时通常采用嵌入式设计</li>
+<li>多对多的关系通常采取引用设计</li>
+<li>只含有几个简单对象的可以单独作为一个Collection，因为整个Collection可以很快的被缓存在应用程序服务器内存中。</li>
+<li>在Collection中嵌入式对象比顶级对象更难引用。你不能引用嵌入式对象（至少目前还没有）。</li>
+<li>它得到一个嵌入式对象的系统级视图更难。例如，如果分数不嵌入它会更容易查询前100的成绩在所有学生。</li>
+<li>如果将要嵌入的数据量很大（很多M），你可以限制单个对象的大小</li>
+<li>如果性能存在问题，请使用嵌入式设计</li>
+</ol>
+</div>
+<div class="section" id="id4">
+<h2>实例<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h2>
+<p>我们来用实例详解下嵌入式和引用（我写数量比较大的Demo时，建模没考虑好直接一对多嵌入，总是报文档过大错误，因为MongoDB聚合查询返回的文档大小限制在16M，大于它就会报错，所以看下面）</p>
+<p>基于MongoDB丰富的表达力，我们不能说我们必须采用一个标准的方法来进行1 to n的建模。稍后我们从3个具体场景来展开讲解。</p>
+<p>首先，我们将1 to n 中的n进行场景细化。这个n究竟代表多大的量级呢？是几个到几十个？还是几个到几千个？还是成千上万个？</p>
+<div class="section" id="to-n-n">
+<h3>1 to n（n代表好几个，或几十个，反正不太多）<a class="headerlink" href="#to-n-n" title="Permalink to this headline">¶</a></h3>
+<p>比如每个Person会有多个Address。此种情况下，我们采用最简单的嵌入式文档来建模。</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="p">{</span>
+ <span class="n">name</span><span class="p">:</span> <span class="s1">&#39;Kate Monster&#39;</span><span class="p">,</span>
+ <span class="nb">id</span><span class="p">:</span> <span class="s1">&#39;123-456-7890&#39;</span><span class="p">,</span>
+ <span class="n">addresses</span> <span class="p">:</span> <span class="p">[</span>
+    <span class="p">{</span> <span class="n">street</span><span class="p">:</span> <span class="s1">&#39;123 Sesame St&#39;</span><span class="p">,</span> <span class="n">city</span><span class="p">:</span> <span class="s1">&#39;Anytown&#39;</span><span class="p">,</span> <span class="n">cc</span><span class="p">:</span> <span class="s1">&#39;USA&#39;</span> <span class="p">},</span>
+    <span class="p">{</span> <span class="n">street</span><span class="p">:</span> <span class="s1">&#39;123 Avenue Q&#39;</span><span class="p">,</span> <span class="n">city</span><span class="p">:</span> <span class="s1">&#39;New York&#39;</span><span class="p">,</span> <span class="n">cc</span><span class="p">:</span> <span class="s1">&#39;USA&#39;</span> <span class="p">}</span>
+ <span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>这种建模的方式包含了显而易见的优点和缺点：</p>
+<p>优点：你不需要执行单独的查询就可以获得某个Person的所有Address信息。</p>
+<p>缺点：你无法像操作独立文档那样来操作Address信息。你必须首先操作（比如查询）Person文档后，才有可能继续操作Address。</p>
+<p>在本实例中，我们不需要对Address进行独立的操作，且Address信息只有在关联到某一个具体Person后才有意义。所以结论是：采用这种embedded（嵌入式）建模是非常适合Person-Address场景的。</p>
+</div>
+<div class="section" id="id5">
+<h3>1 to n（n代表好些个，比如几十个，甚至几百个）<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
+<p>比如产品（Product）和零部件（part），每个产品会有很多个零部件。这种场景下，我们可以采用引用方式来建模，如下：</p>
+<p>零部件（Part）：</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="p">{</span>
+   <span class="n">_id</span> <span class="p">:</span> <span class="n">ObjectID</span><span class="p">(</span><span class="s1">&#39;AAAA&#39;</span><span class="p">),</span>
+   <span class="n">partno</span> <span class="p">:</span> <span class="s1">&#39;123-aff-456&#39;</span><span class="p">,</span>
+   <span class="n">name</span> <span class="p">:</span> <span class="s1">&#39;#4 grommet&#39;</span><span class="p">,</span>
+   <span class="n">qty</span><span class="p">:</span> <span class="mi">94</span><span class="p">,</span>
+   <span class="n">cost</span><span class="p">:</span> <span class="mf">0.94</span><span class="p">,</span>
+   <span class="n">price</span><span class="p">:</span> <span class="mf">3.99</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>产品（Product）：</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="p">{</span>
+   <span class="n">name</span> <span class="p">:</span> <span class="s1">&#39;left-handed smoke shifter&#39;</span><span class="p">,</span>
+   <span class="n">manufacturer</span> <span class="p">:</span> <span class="s1">&#39;Acme Corp&#39;</span><span class="p">,</span>
+   <span class="n">catalog_number</span><span class="p">:</span> <span class="mi">1234</span><span class="p">,</span>
+   <span class="n">parts</span> <span class="p">:</span> <span class="p">[</span>     <span class="o">//</span> <span class="n">array</span> <span class="n">of</span> <span class="n">references</span> <span class="n">to</span> <span class="n">Part</span> <span class="n">documents</span>
+       <span class="n">ObjectID</span><span class="p">(</span><span class="s1">&#39;AAAA&#39;</span><span class="p">),</span>    <span class="o">//</span> <span class="n">reference</span> <span class="n">to</span> <span class="n">the</span> <span class="c1">#4 grommet above</span>
+       <span class="n">ObjectID</span><span class="p">(</span><span class="s1">&#39;F17C&#39;</span><span class="p">),</span>    <span class="o">//</span> <span class="n">reference</span> <span class="n">to</span> <span class="n">a</span> <span class="n">different</span> <span class="n">Part</span>
+       <span class="n">ObjectID</span><span class="p">(</span><span class="s1">&#39;D2AA&#39;</span><span class="p">),</span>
+       <span class="o">//</span> <span class="n">etc</span>
+   <span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>首先每个part作为单独的文档存在。每个产品中包含一个数组类型字段（parts），这个数组中存放的是所有该产品包含的零部件的编号（_id主键）。当你需要根据某一个产品编号查询该产品包含的所有部件信息时，你可以执行以下操作：</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span>&gt; product = db.products.findOne({catalog_number: 1234});
+  // Fetch all the Parts that are linked to this Product
+&gt; product_parts = db.parts.find({_id: { $in : product.parts } } ).toArray() ;
+</pre></div>
+</div>
+<p>这种建模方式的优缺点也非常明显：</p>
+<p>优点：部件是作为独立文档（document）存在的，你可以对某一部件进行独立的操作，比如查询或更新。</p>
+<p>缺点：如上，你必须通过两次查询才能找到某一个产品所属的所有部件信息。</p>
+<p>在本例中，这个缺点是可以接受的，本身实现起来也不难。而且，通过这种建模，你可以轻易的将1 to n扩展到n to n，即一个产品可以包含多个部件，同时一个部件也可以被多个产品所引用（即同一部件可以被多个产品使用）。</p>
+</div>
+<div class="section" id="id6">
+<h3>1 to n（这个n代表很大的数值，比如成千上万，甚至更大）<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h3>
+<p>比如，每一个主机（host）会产生很大数量的日志信息（logmsg）。在这种情况下，如果你采用嵌入式建模，则一个host文档会非常庞大，从而轻易超过MongoDB的文档大小限制，所以不可行。如果你采用第二中方式建模，用数组来存放所有logmsg的_id值，这种方式同样不可行，因为当日志很多时，即使单单引用objectId也会轻易超过文档大小限制(16M)。所以此时，我们采用以下方式：
+主机（hosts）：</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="p">{</span>
+   <span class="n">_id</span> <span class="p">:</span> <span class="n">ObjectID</span><span class="p">(</span><span class="s1">&#39;AAAB&#39;</span><span class="p">),</span>
+   <span class="n">name</span> <span class="p">:</span> <span class="s1">&#39;goofy.example.com&#39;</span><span class="p">,</span>
+   <span class="n">ipaddr</span> <span class="p">:</span> <span class="s1">&#39;127.66.66.66&#39;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>日志（logmsg）：</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="p">{</span>
+   <span class="n">time</span> <span class="p">:</span> <span class="n">ISODate</span><span class="p">(</span><span class="s2">&quot;2014-03-28T09:42:41.382Z&quot;</span><span class="p">),</span>
+   <span class="n">message</span> <span class="p">:</span> <span class="s1">&#39;cpu is on fire!&#39;</span><span class="p">,</span>
+   <span class="n">host</span><span class="p">:</span> <span class="n">ObjectID</span><span class="p">(</span><span class="s1">&#39;AAAB&#39;</span><span class="p">)</span>       <span class="o">//</span> <span class="n">Reference</span> <span class="n">to</span> <span class="n">the</span> <span class="n">Host</span> <span class="n">document</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>我们在logsmg中，存放对host的_id引用即可。</p>
+<p>综上所述，在对1 to n关系建模时，我们需要考虑：
+#. n代表的数量级很小，且n代表的实体不需要单独操作时，可以采用嵌入式建模。
+#. n代表的数量级比较大，或者n代表的实体需要单独进行操作时，采用在1中用Array存放引用的方式建模。
+#. n代表的数量级非常大时，我们没有选择，只能在n端添加一个引用到1端。</p>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">Python</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="list1.html">NoSQL简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="list2.html">MongoDB简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="list3.html">安装MongoDB</a></li>
+<li class="toctree-l1"><a class="reference internal" href="list4.html">基本操作</a></li>
+<li class="toctree-l1"><a class="reference internal" href="list5.html">排序、索引、聚合</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">引用和嵌入</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#mongodb">关系型与mongoDB比较</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id2">mongoDB嵌入与引用比较</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#addressscores">当查询address时比查询scores快</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id3">那我们什么时候需要嵌入，什么时候引用？</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id4">实例</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="list7.html">文件存入</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="list5.html" title="previous chapter">排序、索引、聚合</a></li>
+      <li>Next: <a href="list7.html" title="next chapter">文件存入</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2017, lishuang.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+      |
+      <a href="_sources/list6.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

@@ -1,0 +1,373 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>MongoDB JDBC &#8212; Python 1.0.0 documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="SpringData MongoDB" href="list9.html" />
+    <link rel="prev" title="文件存入" href="list7.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="mongodb-jdbc">
+<h1>MongoDB JDBC<a class="headerlink" href="#mongodb-jdbc" title="Permalink to this headline">¶</a></h1>
+<p>Jar包 下载地址：<a class="reference external" href="http://mongodb.github.io/mongo-java-driver/">http://mongodb.github.io/mongo-java-driver/</a></p>
+<p>国内jar 下载地址：<a class="reference external" href="http://central.maven.org/maven2/org/mongodb/mongo-java-driver/">http://central.maven.org/maven2/org/mongodb/mongo-java-driver/</a>  (这里测试使用3.2.2版)。</p>
+<p>连接数据库，你需要指定数据库名称，如果指定的数据库不存在，mongo会自动创建数据库。</p>
+<p>连接数据库的Java代码如下：</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">com.mongodb.MongoClient</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">com.mongodb.client.MongoDatabase</span><span class="p">;</span>
+
+<span class="n">public</span> <span class="k">class</span> <span class="nc">MongoDBJDBC</span><span class="p">{</span>
+   <span class="n">public</span> <span class="n">static</span> <span class="n">void</span> <span class="n">main</span><span class="p">(</span> <span class="n">String</span> <span class="n">args</span><span class="p">[]</span> <span class="p">){</span>
+          <span class="k">try</span><span class="p">{</span>
+           <span class="o">//</span> <span class="n">连接到</span> <span class="n">mongodb</span> <span class="n">服务</span>
+                 <span class="n">MongoClient</span> <span class="n">mongoClient</span> <span class="o">=</span> <span class="n">new</span> <span class="n">MongoClient</span><span class="p">(</span> <span class="s2">&quot;localhost&quot;</span> <span class="p">,</span> <span class="mi">27017</span> <span class="p">);</span>
+
+                 <span class="o">//</span> <span class="n">连接到数据库</span>
+                 <span class="n">MongoDatabase</span> <span class="n">mongoDatabase</span> <span class="o">=</span> <span class="n">mongoClient</span><span class="o">.</span><span class="n">getDatabase</span><span class="p">(</span><span class="s2">&quot;mycol&quot;</span><span class="p">);</span>
+           <span class="n">System</span><span class="o">.</span><span class="n">out</span><span class="o">.</span><span class="n">println</span><span class="p">(</span><span class="s2">&quot;Connect to database successfully&quot;</span><span class="p">);</span>
+
+          <span class="p">}</span><span class="n">catch</span><span class="p">(</span><span class="ne">Exception</span> <span class="n">e</span><span class="p">){</span>
+                <span class="n">System</span><span class="o">.</span><span class="n">err</span><span class="o">.</span><span class="n">println</span><span class="p">(</span> <span class="n">e</span><span class="o">.</span><span class="n">getClass</span><span class="p">()</span><span class="o">.</span><span class="n">getName</span><span class="p">()</span> <span class="o">+</span> <span class="s2">&quot;: &quot;</span> <span class="o">+</span> <span class="n">e</span><span class="o">.</span><span class="n">getMessage</span><span class="p">()</span> <span class="p">);</span>
+         <span class="p">}</span>
+   <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>本实例中 Mongo 数据库无需用户名密码验证。如果你的 Mongo 需要验证用户名及密码，可以使用以下代码：</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span>import java.util.ArrayList;
+import java.util.List;
+import com.mongodb.MongoClient;
+import com.mongodb.MongoCredential;
+import com.mongodb.ServerAddress;
+import com.mongodb.client.MongoDatabase;
+
+public class MongoDBJDBC {
+        public static void main(String[] args){
+                try {
+                        //连接到MongoDB服务 如果是远程连接可以替换“localhost”为服务器所在IP地址
+                        //ServerAddress()两个参数分别为 服务器地址 和 端口
+                        ServerAddress serverAddress = new ServerAddress(&quot;localhost&quot;,27017);
+                        List&lt;ServerAddress&gt; addrs = new ArrayList&lt;ServerAddress&gt;();
+                        addrs.add(serverAddress);
+
+                        //MongoCredential.createScramSha1Credential()三个参数分别为 用户名 数据库名称 密码
+                        MongoCredential credential = MongoCredential.createScramSha1Credential(&quot;username&quot;, &quot;databaseName&quot;, &quot;password&quot;.toCharArray());
+                        List&lt;MongoCredential&gt; credentials = new ArrayList&lt;MongoCredential&gt;();
+                        credentials.add(credential);
+
+                        //通过连接认证获取MongoDB连接
+                        MongoClient mongoClient = new MongoClient(addrs,credentials);
+
+                        //连接到数据库
+                        MongoDatabase mongoDatabase = mongoClient.getDatabase(&quot;databaseName&quot;);
+                        System.out.println(&quot;Connect to database successfully&quot;);
+                } catch (Exception e) {
+                        System.err.println( e.getClass().getName() + &quot;: &quot; + e.getMessage() );
+                }
+        }
+}
+</pre></div>
+</div>
+<p>我们可以使用 com.mongodb.client.MongoDatabase 类中的createCollection()来创建集合</p>
+<p>代码片段如下：</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">com.mongodb.MongoClient</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">com.mongodb.client.MongoDatabase</span><span class="p">;</span>
+
+<span class="n">public</span> <span class="k">class</span> <span class="nc">MongoDBJDBC</span><span class="p">{</span>
+   <span class="n">public</span> <span class="n">static</span> <span class="n">void</span> <span class="n">main</span><span class="p">(</span> <span class="n">String</span> <span class="n">args</span><span class="p">[]</span> <span class="p">){</span>
+          <span class="k">try</span><span class="p">{</span>
+          <span class="o">//</span> <span class="n">连接到</span> <span class="n">mongodb</span> <span class="n">服务</span>
+          <span class="n">MongoClient</span> <span class="n">mongoClient</span> <span class="o">=</span> <span class="n">new</span> <span class="n">MongoClient</span><span class="p">(</span> <span class="s2">&quot;localhost&quot;</span> <span class="p">,</span> <span class="mi">27017</span> <span class="p">);</span>
+
+
+          <span class="o">//</span> <span class="n">连接到数据库</span>
+          <span class="n">MongoDatabase</span> <span class="n">mongoDatabase</span> <span class="o">=</span> <span class="n">mongoClient</span><span class="o">.</span><span class="n">getDatabase</span><span class="p">(</span><span class="s2">&quot;mycol&quot;</span><span class="p">);</span>
+          <span class="n">System</span><span class="o">.</span><span class="n">out</span><span class="o">.</span><span class="n">println</span><span class="p">(</span><span class="s2">&quot;Connect to database successfully&quot;</span><span class="p">);</span>
+          <span class="n">mongoDatabase</span><span class="o">.</span><span class="n">createCollection</span><span class="p">(</span><span class="s2">&quot;test&quot;</span><span class="p">);</span>
+          <span class="n">System</span><span class="o">.</span><span class="n">out</span><span class="o">.</span><span class="n">println</span><span class="p">(</span><span class="s2">&quot;集合创建成功&quot;</span><span class="p">);</span>
+
+          <span class="p">}</span><span class="n">catch</span><span class="p">(</span><span class="ne">Exception</span> <span class="n">e</span><span class="p">){</span>
+                <span class="n">System</span><span class="o">.</span><span class="n">err</span><span class="o">.</span><span class="n">println</span><span class="p">(</span> <span class="n">e</span><span class="o">.</span><span class="n">getClass</span><span class="p">()</span><span class="o">.</span><span class="n">getName</span><span class="p">()</span> <span class="o">+</span> <span class="s2">&quot;: &quot;</span> <span class="o">+</span> <span class="n">e</span><span class="o">.</span><span class="n">getMessage</span><span class="p">()</span> <span class="p">);</span>
+         <span class="p">}</span>
+   <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>我们可以使用com.mongodb.client.MongoDatabase类的 getCollection() 方法来获取一个集合</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">org.bson.Document</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">com.mongodb.MongoClient</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">com.mongodb.client.MongoCollection</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">com.mongodb.client.MongoDatabase</span><span class="p">;</span>
+
+<span class="n">public</span> <span class="k">class</span> <span class="nc">MongoDBJDBC</span><span class="p">{</span>
+   <span class="n">public</span> <span class="n">static</span> <span class="n">void</span> <span class="n">main</span><span class="p">(</span> <span class="n">String</span> <span class="n">args</span><span class="p">[]</span> <span class="p">){</span>
+          <span class="k">try</span><span class="p">{</span>
+           <span class="o">//</span> <span class="n">连接到</span> <span class="n">mongodb</span> <span class="n">服务</span>
+                 <span class="n">MongoClient</span> <span class="n">mongoClient</span> <span class="o">=</span> <span class="n">new</span> <span class="n">MongoClient</span><span class="p">(</span> <span class="s2">&quot;localhost&quot;</span> <span class="p">,</span> <span class="mi">27017</span> <span class="p">);</span>
+
+                 <span class="o">//</span> <span class="n">连接到数据库</span>
+                 <span class="n">MongoDatabase</span> <span class="n">mongoDatabase</span> <span class="o">=</span> <span class="n">mongoClient</span><span class="o">.</span><span class="n">getDatabase</span><span class="p">(</span><span class="s2">&quot;mycol&quot;</span><span class="p">);</span>
+           <span class="n">System</span><span class="o">.</span><span class="n">out</span><span class="o">.</span><span class="n">println</span><span class="p">(</span><span class="s2">&quot;Connect to database successfully&quot;</span><span class="p">);</span>
+
+           <span class="n">MongoCollection</span><span class="o">&lt;</span><span class="n">Document</span><span class="o">&gt;</span> <span class="n">collection</span> <span class="o">=</span> <span class="n">mongoDatabase</span><span class="o">.</span><span class="n">getCollection</span><span class="p">(</span><span class="s2">&quot;test&quot;</span><span class="p">);</span>
+           <span class="n">System</span><span class="o">.</span><span class="n">out</span><span class="o">.</span><span class="n">println</span><span class="p">(</span><span class="s2">&quot;集合 test 选择成功&quot;</span><span class="p">);</span>
+          <span class="p">}</span><span class="n">catch</span><span class="p">(</span><span class="ne">Exception</span> <span class="n">e</span><span class="p">){</span>
+                <span class="n">System</span><span class="o">.</span><span class="n">err</span><span class="o">.</span><span class="n">println</span><span class="p">(</span> <span class="n">e</span><span class="o">.</span><span class="n">getClass</span><span class="p">()</span><span class="o">.</span><span class="n">getName</span><span class="p">()</span> <span class="o">+</span> <span class="s2">&quot;: &quot;</span> <span class="o">+</span> <span class="n">e</span><span class="o">.</span><span class="n">getMessage</span><span class="p">()</span> <span class="p">);</span>
+         <span class="p">}</span>
+   <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>我们可以使用com.mongodb.client.MongoCollection类的 insertMany() 方法来插入一个文档</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">org.bson.Document</span><span class="p">;</span>
+
+<span class="kn">import</span> <span class="nn">com.mongodb.MongoClient</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">com.mongodb.client.MongoCollection</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">com.mongodb.client.MongoDatabase</span><span class="p">;</span>
+
+<span class="n">public</span> <span class="k">class</span> <span class="nc">MongoDBJDBC</span><span class="p">{</span>
+   <span class="n">public</span> <span class="n">static</span> <span class="n">void</span> <span class="n">main</span><span class="p">(</span> <span class="n">String</span> <span class="n">args</span><span class="p">[]</span> <span class="p">){</span>
+          <span class="k">try</span><span class="p">{</span>
+                 <span class="o">//</span> <span class="n">连接到</span> <span class="n">mongodb</span> <span class="n">服务</span>
+                 <span class="n">MongoClient</span> <span class="n">mongoClient</span> <span class="o">=</span> <span class="n">new</span> <span class="n">MongoClient</span><span class="p">(</span> <span class="s2">&quot;localhost&quot;</span> <span class="p">,</span> <span class="mi">27017</span> <span class="p">);</span>
+
+                 <span class="o">//</span> <span class="n">连接到数据库</span>
+                 <span class="n">MongoDatabase</span> <span class="n">mongoDatabase</span> <span class="o">=</span> <span class="n">mongoClient</span><span class="o">.</span><span class="n">getDatabase</span><span class="p">(</span><span class="s2">&quot;mycol&quot;</span><span class="p">);</span>
+                 <span class="n">System</span><span class="o">.</span><span class="n">out</span><span class="o">.</span><span class="n">println</span><span class="p">(</span><span class="s2">&quot;Connect to database successfully&quot;</span><span class="p">);</span>
+
+                 <span class="n">MongoCollection</span><span class="o">&lt;</span><span class="n">Document</span><span class="o">&gt;</span> <span class="n">collection</span> <span class="o">=</span> <span class="n">mongoDatabase</span><span class="o">.</span><span class="n">getCollection</span><span class="p">(</span><span class="s2">&quot;test&quot;</span><span class="p">);</span>
+                 <span class="n">System</span><span class="o">.</span><span class="n">out</span><span class="o">.</span><span class="n">println</span><span class="p">(</span><span class="s2">&quot;集合 test 选择成功&quot;</span><span class="p">);</span>
+                 <span class="o">//</span><span class="n">插入文档</span>
+                 <span class="o">/**</span>
+                 <span class="o">*</span> <span class="mf">1.</span> <span class="n">创建文档</span> <span class="n">org</span><span class="o">.</span><span class="n">bson</span><span class="o">.</span><span class="n">Document</span> <span class="n">参数为key</span><span class="o">-</span><span class="n">value的格式</span>
+                 <span class="o">*</span> <span class="mf">2.</span> <span class="n">创建文档集合List</span><span class="o">&lt;</span><span class="n">Document</span><span class="o">&gt;</span>
+                 <span class="o">*</span> <span class="mf">3.</span> <span class="n">将文档集合插入数据库集合中</span> <span class="n">mongoCollection</span><span class="o">.</span><span class="n">insertMany</span><span class="p">(</span><span class="n">List</span><span class="o">&lt;</span><span class="n">Document</span><span class="o">&gt;</span><span class="p">)</span> <span class="n">插入单个文档可以用</span> <span class="n">mongoCollection</span><span class="o">.</span><span class="n">insertOne</span><span class="p">(</span><span class="n">Document</span><span class="p">)</span>
+                 <span class="o">*</span> <span class="o">*/</span>
+                 <span class="n">Document</span> <span class="n">document</span> <span class="o">=</span> <span class="n">new</span> <span class="n">Document</span><span class="p">(</span><span class="s2">&quot;title&quot;</span><span class="p">,</span> <span class="s2">&quot;MongoDB&quot;</span><span class="p">)</span><span class="o">.</span>
+                 <span class="n">append</span><span class="p">(</span><span class="s2">&quot;description&quot;</span><span class="p">,</span> <span class="s2">&quot;database&quot;</span><span class="p">)</span><span class="o">.</span>
+                 <span class="n">append</span><span class="p">(</span><span class="s2">&quot;likes&quot;</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span><span class="o">.</span>
+                 <span class="n">append</span><span class="p">(</span><span class="s2">&quot;by&quot;</span><span class="p">,</span> <span class="s2">&quot;Fly&quot;</span><span class="p">);</span>
+                 <span class="n">List</span><span class="o">&lt;</span><span class="n">Document</span><span class="o">&gt;</span> <span class="n">documents</span> <span class="o">=</span> <span class="n">new</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">Document</span><span class="o">&gt;</span><span class="p">();</span>
+                 <span class="n">documents</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">document</span><span class="p">);</span>
+                 <span class="n">collection</span><span class="o">.</span><span class="n">insertMany</span><span class="p">(</span><span class="n">documents</span><span class="p">);</span>
+                 <span class="n">System</span><span class="o">.</span><span class="n">out</span><span class="o">.</span><span class="n">println</span><span class="p">(</span><span class="s2">&quot;文档插入成功&quot;</span><span class="p">);</span>
+          <span class="p">}</span><span class="n">catch</span><span class="p">(</span><span class="ne">Exception</span> <span class="n">e</span><span class="p">){</span>
+                 <span class="n">System</span><span class="o">.</span><span class="n">err</span><span class="o">.</span><span class="n">println</span><span class="p">(</span> <span class="n">e</span><span class="o">.</span><span class="n">getClass</span><span class="p">()</span><span class="o">.</span><span class="n">getName</span><span class="p">()</span> <span class="o">+</span> <span class="s2">&quot;: &quot;</span> <span class="o">+</span> <span class="n">e</span><span class="o">.</span><span class="n">getMessage</span><span class="p">()</span> <span class="p">);</span>
+          <span class="p">}</span>
+   <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>我们可以使用 com.mongodb.client.MongoCollection 类中的 find() 方法来获取集合中的所有文档。</p>
+<p>此方法返回一个游标，所以你需要遍历这个游标。</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">org.bson.Document</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">com.mongodb.MongoClient</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">com.mongodb.client.FindIterable</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">com.mongodb.client.MongoCollection</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">com.mongodb.client.MongoCursor</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">com.mongodb.client.MongoDatabase</span><span class="p">;</span>
+
+<span class="n">public</span> <span class="k">class</span> <span class="nc">MongoDBJDBC</span><span class="p">{</span>
+   <span class="n">public</span> <span class="n">static</span> <span class="n">void</span> <span class="n">main</span><span class="p">(</span> <span class="n">String</span> <span class="n">args</span><span class="p">[]</span> <span class="p">){</span>
+          <span class="k">try</span><span class="p">{</span>
+                 <span class="o">//</span> <span class="n">连接到</span> <span class="n">mongodb</span> <span class="n">服务</span>
+                 <span class="n">MongoClient</span> <span class="n">mongoClient</span> <span class="o">=</span> <span class="n">new</span> <span class="n">MongoClient</span><span class="p">(</span> <span class="s2">&quot;localhost&quot;</span> <span class="p">,</span> <span class="mi">27017</span> <span class="p">);</span>
+
+                 <span class="o">//</span> <span class="n">连接到数据库</span>
+                 <span class="n">MongoDatabase</span> <span class="n">mongoDatabase</span> <span class="o">=</span> <span class="n">mongoClient</span><span class="o">.</span><span class="n">getDatabase</span><span class="p">(</span><span class="s2">&quot;mycol&quot;</span><span class="p">);</span>
+                 <span class="n">System</span><span class="o">.</span><span class="n">out</span><span class="o">.</span><span class="n">println</span><span class="p">(</span><span class="s2">&quot;Connect to database successfully&quot;</span><span class="p">);</span>
+
+                 <span class="n">MongoCollection</span><span class="o">&lt;</span><span class="n">Document</span><span class="o">&gt;</span> <span class="n">collection</span> <span class="o">=</span> <span class="n">mongoDatabase</span><span class="o">.</span><span class="n">getCollection</span><span class="p">(</span><span class="s2">&quot;test&quot;</span><span class="p">);</span>
+                 <span class="n">System</span><span class="o">.</span><span class="n">out</span><span class="o">.</span><span class="n">println</span><span class="p">(</span><span class="s2">&quot;集合 test 选择成功&quot;</span><span class="p">);</span>
+
+                 <span class="o">//</span><span class="n">检索所有文档</span>
+                 <span class="o">/**</span>
+                 <span class="o">*</span> <span class="mf">1.</span> <span class="n">获取迭代器FindIterable</span><span class="o">&lt;</span><span class="n">Document</span><span class="o">&gt;</span>
+                 <span class="o">*</span> <span class="mf">2.</span> <span class="n">获取游标MongoCursor</span><span class="o">&lt;</span><span class="n">Document</span><span class="o">&gt;</span>
+                 <span class="o">*</span> <span class="mf">3.</span> <span class="n">通过游标遍历检索出的文档集合</span>
+                 <span class="o">*</span> <span class="o">*/</span>
+                 <span class="n">FindIterable</span><span class="o">&lt;</span><span class="n">Document</span><span class="o">&gt;</span> <span class="n">findIterable</span> <span class="o">=</span> <span class="n">collection</span><span class="o">.</span><span class="n">find</span><span class="p">();</span>
+                 <span class="n">MongoCursor</span><span class="o">&lt;</span><span class="n">Document</span><span class="o">&gt;</span> <span class="n">mongoCursor</span> <span class="o">=</span> <span class="n">findIterable</span><span class="o">.</span><span class="n">iterator</span><span class="p">();</span>
+                 <span class="k">while</span><span class="p">(</span><span class="n">mongoCursor</span><span class="o">.</span><span class="n">hasNext</span><span class="p">()){</span>
+                        <span class="n">System</span><span class="o">.</span><span class="n">out</span><span class="o">.</span><span class="n">println</span><span class="p">(</span><span class="n">mongoCursor</span><span class="o">.</span><span class="n">next</span><span class="p">());</span>
+                 <span class="p">}</span>
+
+          <span class="p">}</span><span class="n">catch</span><span class="p">(</span><span class="ne">Exception</span> <span class="n">e</span><span class="p">){</span>
+                 <span class="n">System</span><span class="o">.</span><span class="n">err</span><span class="o">.</span><span class="n">println</span><span class="p">(</span> <span class="n">e</span><span class="o">.</span><span class="n">getClass</span><span class="p">()</span><span class="o">.</span><span class="n">getName</span><span class="p">()</span> <span class="o">+</span> <span class="s2">&quot;: &quot;</span> <span class="o">+</span> <span class="n">e</span><span class="o">.</span><span class="n">getMessage</span><span class="p">()</span> <span class="p">);</span>
+          <span class="p">}</span>
+   <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>编译运行以上程序，输出结果如下:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">Connect</span> <span class="n">to</span> <span class="n">database</span> <span class="n">successfully</span>
+<span class="n">集合</span> <span class="n">test</span> <span class="n">选择成功</span>
+<span class="n">Document</span><span class="p">{{</span><span class="n">_id</span><span class="o">=</span><span class="mf">56e65</span><span class="n">fb1fd57a86304fe2692</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="n">MongoDB</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="n">database</span><span class="p">,</span> <span class="n">likes</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">by</span><span class="o">=</span><span class="n">Fly</span><span class="p">}}</span>
+</pre></div>
+</div>
+<p>你可以使用 com.mongodb.client.MongoCollection 类中的 updateMany() 方法来更新集合中的文档。</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">public</span> <span class="k">class</span> <span class="nc">MongoDBJDBC</span><span class="p">{</span>
+   <span class="n">public</span> <span class="n">static</span> <span class="n">void</span> <span class="n">main</span><span class="p">(</span> <span class="n">String</span> <span class="n">args</span><span class="p">[]</span> <span class="p">){</span>
+          <span class="k">try</span><span class="p">{</span>
+                 <span class="o">//</span> <span class="n">连接到</span> <span class="n">mongodb</span> <span class="n">服务</span>
+                 <span class="n">MongoClient</span> <span class="n">mongoClient</span> <span class="o">=</span> <span class="n">new</span> <span class="n">MongoClient</span><span class="p">(</span> <span class="s2">&quot;localhost&quot;</span> <span class="p">,</span> <span class="mi">27017</span> <span class="p">);</span>
+
+                 <span class="o">//</span> <span class="n">连接到数据库</span>
+                 <span class="n">MongoDatabase</span> <span class="n">mongoDatabase</span> <span class="o">=</span> <span class="n">mongoClient</span><span class="o">.</span><span class="n">getDatabase</span><span class="p">(</span><span class="s2">&quot;mycol&quot;</span><span class="p">);</span>
+                 <span class="n">System</span><span class="o">.</span><span class="n">out</span><span class="o">.</span><span class="n">println</span><span class="p">(</span><span class="s2">&quot;Connect to database successfully&quot;</span><span class="p">);</span>
+
+                 <span class="n">MongoCollection</span><span class="o">&lt;</span><span class="n">Document</span><span class="o">&gt;</span> <span class="n">collection</span> <span class="o">=</span> <span class="n">mongoDatabase</span><span class="o">.</span><span class="n">getCollection</span><span class="p">(</span><span class="s2">&quot;test&quot;</span><span class="p">);</span>
+                 <span class="n">System</span><span class="o">.</span><span class="n">out</span><span class="o">.</span><span class="n">println</span><span class="p">(</span><span class="s2">&quot;集合 test 选择成功&quot;</span><span class="p">);</span>
+
+                 <span class="o">//</span><span class="n">更新文档</span>   <span class="n">将文档中likes</span><span class="o">=</span><span class="mi">100</span><span class="n">的文档修改为likes</span><span class="o">=</span><span class="mi">200</span>
+                 <span class="n">collection</span><span class="o">.</span><span class="n">updateMany</span><span class="p">(</span><span class="n">Filters</span><span class="o">.</span><span class="n">eq</span><span class="p">(</span><span class="s2">&quot;likes&quot;</span><span class="p">,</span> <span class="mi">100</span><span class="p">),</span> <span class="n">new</span> <span class="n">Document</span><span class="p">(</span><span class="s2">&quot;$set&quot;</span><span class="p">,</span><span class="n">new</span> <span class="n">Document</span><span class="p">(</span><span class="s2">&quot;likes&quot;</span><span class="p">,</span><span class="mi">200</span><span class="p">)));</span>
+                 <span class="o">//</span><span class="n">检索查看结果</span>
+                 <span class="n">FindIterable</span><span class="o">&lt;</span><span class="n">Document</span><span class="o">&gt;</span> <span class="n">findIterable</span> <span class="o">=</span> <span class="n">collection</span><span class="o">.</span><span class="n">find</span><span class="p">();</span>
+                 <span class="n">MongoCursor</span><span class="o">&lt;</span><span class="n">Document</span><span class="o">&gt;</span> <span class="n">mongoCursor</span> <span class="o">=</span> <span class="n">findIterable</span><span class="o">.</span><span class="n">iterator</span><span class="p">();</span>
+                 <span class="k">while</span><span class="p">(</span><span class="n">mongoCursor</span><span class="o">.</span><span class="n">hasNext</span><span class="p">()){</span>
+                        <span class="n">System</span><span class="o">.</span><span class="n">out</span><span class="o">.</span><span class="n">println</span><span class="p">(</span><span class="n">mongoCursor</span><span class="o">.</span><span class="n">next</span><span class="p">());</span>
+                 <span class="p">}</span>
+
+          <span class="p">}</span><span class="n">catch</span><span class="p">(</span><span class="ne">Exception</span> <span class="n">e</span><span class="p">){</span>
+                 <span class="n">System</span><span class="o">.</span><span class="n">err</span><span class="o">.</span><span class="n">println</span><span class="p">(</span> <span class="n">e</span><span class="o">.</span><span class="n">getClass</span><span class="p">()</span><span class="o">.</span><span class="n">getName</span><span class="p">()</span> <span class="o">+</span> <span class="s2">&quot;: &quot;</span> <span class="o">+</span> <span class="n">e</span><span class="o">.</span><span class="n">getMessage</span><span class="p">()</span> <span class="p">);</span>
+          <span class="p">}</span>
+   <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>要删除集合中的第一个文档，首先你需要使用com.mongodb.DBCollection类中的 findOne()方法来获取第一个文档，然后使用remove 方法删除。</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">public</span> <span class="k">class</span> <span class="nc">MongoDBJDBC</span><span class="p">{</span>
+   <span class="n">public</span> <span class="n">static</span> <span class="n">void</span> <span class="n">main</span><span class="p">(</span> <span class="n">String</span> <span class="n">args</span><span class="p">[]</span> <span class="p">){</span>
+          <span class="k">try</span><span class="p">{</span>
+                 <span class="o">//</span> <span class="n">连接到</span> <span class="n">mongodb</span> <span class="n">服务</span>
+                 <span class="n">MongoClient</span> <span class="n">mongoClient</span> <span class="o">=</span> <span class="n">new</span> <span class="n">MongoClient</span><span class="p">(</span> <span class="s2">&quot;localhost&quot;</span> <span class="p">,</span> <span class="mi">27017</span> <span class="p">);</span>
+
+                 <span class="o">//</span> <span class="n">连接到数据库</span>
+                 <span class="n">MongoDatabase</span> <span class="n">mongoDatabase</span> <span class="o">=</span> <span class="n">mongoClient</span><span class="o">.</span><span class="n">getDatabase</span><span class="p">(</span><span class="s2">&quot;mycol&quot;</span><span class="p">);</span>
+                 <span class="n">System</span><span class="o">.</span><span class="n">out</span><span class="o">.</span><span class="n">println</span><span class="p">(</span><span class="s2">&quot;Connect to database successfully&quot;</span><span class="p">);</span>
+
+                 <span class="n">MongoCollection</span><span class="o">&lt;</span><span class="n">Document</span><span class="o">&gt;</span> <span class="n">collection</span> <span class="o">=</span> <span class="n">mongoDatabase</span><span class="o">.</span><span class="n">getCollection</span><span class="p">(</span><span class="s2">&quot;test&quot;</span><span class="p">);</span>
+                 <span class="n">System</span><span class="o">.</span><span class="n">out</span><span class="o">.</span><span class="n">println</span><span class="p">(</span><span class="s2">&quot;集合 test 选择成功&quot;</span><span class="p">);</span>
+
+                 <span class="o">//</span><span class="n">删除符合条件的第一个文档</span>
+                 <span class="n">collection</span><span class="o">.</span><span class="n">deleteOne</span><span class="p">(</span><span class="n">Filters</span><span class="o">.</span><span class="n">eq</span><span class="p">(</span><span class="s2">&quot;likes&quot;</span><span class="p">,</span> <span class="mi">200</span><span class="p">));</span>
+                 <span class="o">//</span><span class="n">删除所有符合条件的文档</span>
+                 <span class="n">collection</span><span class="o">.</span><span class="n">deleteMany</span> <span class="p">(</span><span class="n">Filters</span><span class="o">.</span><span class="n">eq</span><span class="p">(</span><span class="s2">&quot;likes&quot;</span><span class="p">,</span> <span class="mi">200</span><span class="p">));</span>
+                 <span class="o">//</span><span class="n">检索查看结果</span>
+                 <span class="n">FindIterable</span><span class="o">&lt;</span><span class="n">Document</span><span class="o">&gt;</span> <span class="n">findIterable</span> <span class="o">=</span> <span class="n">collection</span><span class="o">.</span><span class="n">find</span><span class="p">();</span>
+                 <span class="n">MongoCursor</span><span class="o">&lt;</span><span class="n">Document</span><span class="o">&gt;</span> <span class="n">mongoCursor</span> <span class="o">=</span> <span class="n">findIterable</span><span class="o">.</span><span class="n">iterator</span><span class="p">();</span>
+                 <span class="k">while</span><span class="p">(</span><span class="n">mongoCursor</span><span class="o">.</span><span class="n">hasNext</span><span class="p">()){</span>
+                   <span class="n">System</span><span class="o">.</span><span class="n">out</span><span class="o">.</span><span class="n">println</span><span class="p">(</span><span class="n">mongoCursor</span><span class="o">.</span><span class="n">next</span><span class="p">());</span>
+                 <span class="p">}</span>
+
+          <span class="p">}</span><span class="n">catch</span><span class="p">(</span><span class="ne">Exception</span> <span class="n">e</span><span class="p">){</span>
+                <span class="n">System</span><span class="o">.</span><span class="n">err</span><span class="o">.</span><span class="n">println</span><span class="p">(</span> <span class="n">e</span><span class="o">.</span><span class="n">getClass</span><span class="p">()</span><span class="o">.</span><span class="n">getName</span><span class="p">()</span> <span class="o">+</span> <span class="s2">&quot;: &quot;</span> <span class="o">+</span> <span class="n">e</span><span class="o">.</span><span class="n">getMessage</span><span class="p">()</span> <span class="p">);</span>
+         <span class="p">}</span>
+   <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>更多操作可以参考：<a class="reference external" href="http://mongodb.github.io/mongo-java-driver/3.0/driver/getting-started/quick-tour/">http://mongodb.github.io/mongo-java-driver/3.0/driver/getting-started/quick-tour/</a></p>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">Python</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="list1.html">NoSQL简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="list2.html">MongoDB简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="list3.html">安装MongoDB</a></li>
+<li class="toctree-l1"><a class="reference internal" href="list4.html">基本操作</a></li>
+<li class="toctree-l1"><a class="reference internal" href="list5.html">排序、索引、聚合</a></li>
+<li class="toctree-l1"><a class="reference internal" href="list6.html">引用和嵌入</a></li>
+<li class="toctree-l1"><a class="reference internal" href="list7.html">文件存入</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">MongoDB JDBC</a></li>
+<li class="toctree-l1"><a class="reference internal" href="list9.html">SpringData MongoDB</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="list7.html" title="previous chapter">文件存入</a></li>
+      <li>Next: <a href="list9.html" title="next chapter">SpringData MongoDB</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2017, lishuang.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+      |
+      <a href="_sources/list8.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

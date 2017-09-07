@@ -1,0 +1,183 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>NoSQL简介 &#8212; Python 1.0.0 documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="MongoDB简介" href="list2.html" />
+    <link rel="prev" title="MongoDB讲述" href="index.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="nosql">
+<h1>NoSQL简介<a class="headerlink" href="#nosql" title="Permalink to this headline">¶</a></h1>
+<p>NoSQL，指的是非关系型的数据库。NoSQL有时也称作Not Only SQL的缩写，是对不同于传统的关系型数据库（RDMBSs）的数据库管理系统的统称。</p>
+<p>NoSQL用于超大规模数据的存储。（例如谷歌或Facebook每天为他们的用户收集万亿比特的数据）。用户的个人信息，社交网络，地理位置，用户生成的数据和用户操作日志已经成倍的增加。这些类型的数据存储不需要固定的模式，无需多余操作就可以横向扩展。我们如果要对这些用户数据进行挖掘，那SQL数据库已经不适合这些应用了, NoSQL数据库的发展也却能很好的处理这些大的数据。</p>
+<div class="section" id="nosql-vs-rdbs">
+<h2>NoSQL vs RDBS<a class="headerlink" href="#nosql-vs-rdbs" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id1">
+<h3>NoSQL<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><ul class="simple">
+<li>代表着不仅仅是SQL</li>
+<li>没有声明性查询语言</li>
+<li>没有预定义的模式</li>
+<li>键-值对存储，列存储，文档存储，图形数据库</li>
+<li>最终一致性，而非ACID属性</li>
+<li>非结构化和不可预知的数据</li>
+<li>CAP定理</li>
+<li>高性能，高可用性和可伸缩性</li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="rdbs">
+<h3>RDBS<a class="headerlink" href="#rdbs" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><ul class="simple">
+<li>高度组织化结构化数据</li>
+<li>结构化查询语言（SQL）</li>
+<li>数据和关系都存储在单独的表中。</li>
+<li>数据操纵语言，数据定义语言</li>
+<li>严格的一致性</li>
+<li>基础事务</li>
+</ul>
+</div></blockquote>
+</div>
+</div>
+<div class="section" id="id2">
+<h2>NoSQL的优点/缺点<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id3">
+<h3>优点：<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><ul class="simple">
+<li>高可扩展性</li>
+<li>分布式计算</li>
+<li>低成本</li>
+<li>架构的灵活性，半结构化数据</li>
+<li>没有复杂的关系</li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="id4">
+<h3>缺点：<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><ul class="simple">
+<li>没有标准化</li>
+<li>有限的查询功能（到目前为止）</li>
+<li>最终一致是不直观的程序</li>
+</ul>
+</div></blockquote>
+</div>
+</div>
+<div class="section" id="cap">
+<h2>CAP定理<a class="headerlink" href="#cap" title="Permalink to this headline">¶</a></h2>
+<p>在计算机科学中, CAP定理（CAP theorem）, 又被称作布鲁尔定理（Brewer’stheorem）,它指出对于一个分布式计算系统来说，不可能同时满足以下三点:</p>
+<p>一致性(Consistency) (所有节点在同一时间具有相同的数据)</p>
+<p>可用性(Availability) (保证每个请求不管成功或者失败都有响应)</p>
+<p>分隔容忍(Partition tolerance) (系统中任意信息的丢失或失败不会影响系统的继续运作)</p>
+<p>CAP理论的核心是：一个分布式系统不可能同时很好的满足一致性，可用性和分区容错性这三个需求，最多只能同时较好的满足两个。</p>
+</div>
+<div class="section" id="id5">
+<h2>NoSQL数据库分类<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h2>
+<img alt="_images/NoSQL.jpg" src="_images/NoSQL.jpg" />
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">Python</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">NoSQL简介</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#nosql-vs-rdbs">NoSQL vs RDBS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id2">NoSQL的优点/缺点</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#cap">CAP定理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id5">NoSQL数据库分类</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="list2.html">MongoDB简介</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="index.html" title="previous chapter">MongoDB讲述</a></li>
+      <li>Next: <a href="list2.html" title="next chapter">MongoDB简介</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2017, lishuang.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+      |
+      <a href="_sources/list1.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

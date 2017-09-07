@@ -1,0 +1,188 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>MongoDB讲述 &#8212; Python 1.0.0 documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="NoSQL简介" href="list1.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="mongodb">
+<h1>MongoDB讲述<a class="headerlink" href="#mongodb" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="id1">
+<h2>内置数据类型<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="pythonnumbers">
+<h3>和大多数动态语言一样，python中的变量是动态变量numbers(数字)<a class="headerlink" href="#pythonnumbers" title="Permalink to this headline">¶</a></h3>
+<p>数字的使用跟数学表达式一样:</p>
+</div>
+<div class="section" id="string">
+<h3>string(字符串)<a class="headerlink" href="#string" title="Permalink to this headline">¶</a></h3>
+<p>python通过单引号、双引号或三重引号引起来的表示字符串。</p>
+<p>Contents:</p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="list1.html">NoSQL简介</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="list1.html#nosql-vs-rdbs">NoSQL vs RDBS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="list1.html#id2">NoSQL的优点/缺点</a></li>
+<li class="toctree-l2"><a class="reference internal" href="list1.html#cap">CAP定理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="list1.html#id5">NoSQL数据库分类</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="list2.html">MongoDB简介</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="list2.html#mysql">与Mysql的结构对比</a></li>
+<li class="toctree-l2"><a class="reference internal" href="list2.html#id1">MongoDB主要特点</a></li>
+<li class="toctree-l2"><a class="reference internal" href="list2.html#id2">MongoDB</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="list3.html">安装MongoDB</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="list3.html#id1">安装</a></li>
+<li class="toctree-l2"><a class="reference internal" href="list3.html#id2">运行</a></li>
+<li class="toctree-l2"><a class="reference internal" href="list3.html#mongodbwindows">将MongoDB设置成Windows服务</a></li>
+<li class="toctree-l2"><a class="reference internal" href="list3.html#gui">GUI</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="list4.html">基本操作</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="list4.html#id2">1.创建/删除数据库</a></li>
+<li class="toctree-l2"><a class="reference internal" href="list4.html#id3">2.插入文档</a></li>
+<li class="toctree-l2"><a class="reference internal" href="list4.html#id4">3.更新文档</a></li>
+<li class="toctree-l2"><a class="reference internal" href="list4.html#id5">4.删除文档</a></li>
+<li class="toctree-l2"><a class="reference internal" href="list4.html#id6">5.查询</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="list5.html">排序、索引、聚合</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="list5.html#id2">排序</a></li>
+<li class="toctree-l2"><a class="reference internal" href="list5.html#id3">索引</a></li>
+<li class="toctree-l2"><a class="reference internal" href="list5.html#id7">聚合</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="list6.html">引用和嵌入</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="list6.html#mongodb">关系型与mongoDB比较</a></li>
+<li class="toctree-l2"><a class="reference internal" href="list6.html#id2">mongoDB嵌入与引用比较</a></li>
+<li class="toctree-l2"><a class="reference internal" href="list6.html#addressscores">当查询address时比查询scores快</a></li>
+<li class="toctree-l2"><a class="reference internal" href="list6.html#id3">那我们什么时候需要嵌入，什么时候引用？</a></li>
+<li class="toctree-l2"><a class="reference internal" href="list6.html#id4">实例</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="list7.html">文件存入</a></li>
+<li class="toctree-l1"><a class="reference internal" href="list8.html">MongoDB JDBC</a></li>
+<li class="toctree-l1"><a class="reference internal" href="list9.html">SpringData MongoDB</a></li>
+<li class="toctree-l1"><a class="reference internal" href="list10.html">就例子总结与mysql 的对比</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="list10.html#id1">实例</a></li>
+<li class="toctree-l2"><a class="reference internal" href="list10.html#id2">与Mysql对比</a></li>
+<li class="toctree-l2"><a class="reference internal" href="list10.html#mongodb">MongoDB优势</a></li>
+<li class="toctree-l2"><a class="reference internal" href="list10.html#id3">MongoDB缺点</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="list11.html">应用场景</a></li>
+</ul>
+</div>
+<ul class="simple">
+<li><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></li>
+<li><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></li>
+<li><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></li>
+</ul>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="#">Python</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="list1.html">NoSQL简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="list2.html">MongoDB简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="list3.html">安装MongoDB</a></li>
+<li class="toctree-l1"><a class="reference internal" href="list4.html">基本操作</a></li>
+<li class="toctree-l1"><a class="reference internal" href="list5.html">排序、索引、聚合</a></li>
+<li class="toctree-l1"><a class="reference internal" href="list6.html">引用和嵌入</a></li>
+<li class="toctree-l1"><a class="reference internal" href="list7.html">文件存入</a></li>
+<li class="toctree-l1"><a class="reference internal" href="list8.html">MongoDB JDBC</a></li>
+<li class="toctree-l1"><a class="reference internal" href="list9.html">SpringData MongoDB</a></li>
+<li class="toctree-l1"><a class="reference internal" href="list10.html">就例子总结与mysql 的对比</a></li>
+<li class="toctree-l1"><a class="reference internal" href="list11.html">应用场景</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="#">Documentation overview</a><ul>
+      <li>Next: <a href="list1.html" title="next chapter">NoSQL简介</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2017, lishuang.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+      |
+      <a href="_sources/index.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

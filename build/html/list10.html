@@ -1,0 +1,171 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>就例子总结与mysql 的对比 &#8212; Python 1.0.0 documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="应用场景" href="list11.html" />
+    <link rel="prev" title="SpringData MongoDB" href="list9.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="mysql">
+<h1>就例子总结与mysql 的对比<a class="headerlink" href="#mysql" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="id1">
+<h2>实例<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<p>用上面的框架做个demo，有2000个项目（集合为Project），每个项目里分别有500个案例（Case）。我建立的一个案例对应一个项目结构，每条案例引用一个项目，（类似于每个学生有班级的id，之前一直用嵌入的结构，tm返回结果大于16M，弄了好几天，还是不能解决，所以决定换成这样的存储）</p>
+<img alt="_images/project.jpg" src="_images/project.jpg" />
+<img alt="_images/case.jpg" src="_images/case.jpg" />
+<p>集合结构 Project和Case</p>
+<img alt="_images/projectPojo.jpg" src="_images/projectPojo.jpg" />
+<p>实体类 Project</p>
+<img alt="_images/casePojo.jpg" src="_images/casePojo.jpg" />
+<dl class="docutils">
+<dt>实体类Case</dt>
+<dd><ul class="first last simple">
+<li>&#64;Indexed(name = “time”, direction = IndexDirection.DESCENDING)为time字段建立索引</li>
+<li>&#64;DBRef引用Project集合</li>
+</ul>
+</dd>
+</dl>
+<img alt="_images/save1.jpg" src="_images/save1.jpg" />
+<img alt="_images/save2.jpg" src="_images/save2.jpg" />
+<p>先保存入MongoDB的数据，案例里有时间（time）的字段，意思是每个案例有不同的时间，我是利用随机数建立的随机时间。</p>
+<p>红框的部分：MongoDB不支持级联保存，MongoDB不支持事务，所以分别保存，先保存被引用的，再保存引用的。</p>
+<img alt="_images/test.jpg" src="_images/test.jpg" />
+<p>输出结果（我在Case实体类里重写了toString）</p>
+<img alt="_images/print.jpg" src="_images/print.jpg" />
+</div>
+<div class="section" id="id2">
+<h2>与Mysql对比<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<p>我分别测试了MongoDB和Mysql：</p>
+<p>在某个时间段内的所有案例，结果集大约为38万条数据，MongoDB比Mysql查询速率快了约40秒</p>
+<p>而在一个项目里的某段时间的案例，结果集大约190条数据，Mysql比MongoDB快了约1000毫秒</p>
+<p>相比较MySQL，MongoDB数据库更适合那些读作业较重的任务模型。MongoDB能充分利用机器的内存资源。如果机器的内存资源丰富的话，MongoDB的查询效率会快很多。</p>
+<p>在插入数据时候，2000个项目，也就是说有1000000个案例，我用Mysql插了一上午啊（而且经常出现报错，提示连接数不够，我用spring+Mybatis整合的，也许我哪参数配的少了吧），而MongoDB花了近五分钟，就插入完成了。</p>
+</div>
+<div class="section" id="mongodb">
+<h2>MongoDB优势<a class="headerlink" href="#mongodb" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic simple">
+<li>MongoDB适合那些对数据库具体数据格式不明确或者数据库数据格式经常变化的需求模型，而且对开发者十分友好。</li>
+<li>MongoDB官方就自带一个分布式文件系统，可以很方便地部署到服务器机群上。MongoDB里有一个Shard的概念，就是方便为了服务器分片使用的。每增加一台Shard，MongoDB的插入性能也会以接近倍数的方式增长，磁盘容量也很可以很方便地扩充。</li>
+<li>MongoDB还自带了对map-reduce运算框架的支持，这也很方便进行数据的统计。</li>
+</ol>
+</div>
+<div class="section" id="id3">
+<h2>MongoDB缺点<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic simple">
+<li>事务关系支持薄弱。这也是所有NoSQL数据库共同的缺陷，不过NoSQL并不是为了事务关系而设计的，具体应用还是很需求。（所以他不能完全代替关系型数据库，可以说是辅佐型，对关系型的补充）</li>
+<li>稳定性有些欠缺。</li>
+<li>MongoDB一方面在方便开发者的同时，另一方面对运维人员却提出了相当多的要求。</li>
+</ol>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">Python</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="list1.html">NoSQL简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="list2.html">MongoDB简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="list3.html">安装MongoDB</a></li>
+<li class="toctree-l1"><a class="reference internal" href="list4.html">基本操作</a></li>
+<li class="toctree-l1"><a class="reference internal" href="list5.html">排序、索引、聚合</a></li>
+<li class="toctree-l1"><a class="reference internal" href="list6.html">引用和嵌入</a></li>
+<li class="toctree-l1"><a class="reference internal" href="list7.html">文件存入</a></li>
+<li class="toctree-l1"><a class="reference internal" href="list8.html">MongoDB JDBC</a></li>
+<li class="toctree-l1"><a class="reference internal" href="list9.html">SpringData MongoDB</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">就例子总结与mysql 的对比</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#id1">实例</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id2">与Mysql对比</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#mongodb">MongoDB优势</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id3">MongoDB缺点</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="list11.html">应用场景</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="list9.html" title="previous chapter">SpringData MongoDB</a></li>
+      <li>Next: <a href="list11.html" title="next chapter">应用场景</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2017, lishuang.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+      |
+      <a href="_sources/list10.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

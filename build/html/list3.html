@@ -1,0 +1,194 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>安装MongoDB &#8212; Python 1.0.0 documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="基本操作" href="list4.html" />
+    <link rel="prev" title="MongoDB简介" href="list2.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="mongodb">
+<h1>安装MongoDB<a class="headerlink" href="#mongodb" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="id1">
+<h2>安装<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<p>你可以在mongodb官网下载该安装包，MongoDB 预编译二进制包下载地址：<a class="reference external" href="https://www.mongodb.com/download-center#community">https://www.mongodb.com/download-center#community</a></p>
+<p>根据你的系统下载 32 位或 64 位的 .msi 文件，下载后双击该文件，按操作提示安装即可。</p>
+<p>安装过程中，你可以通过点击 “Custom(自定义)” 按钮来设置你的安装目录。</p>
+</div>
+<div class="section" id="id2">
+<h2>运行<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<p>创建数据目录</p>
+<p>MongoDB将数据目录存储在 db 文件夹下。但是这个数据目录不会主动创建，我们在安装完成后需要创建它。请注意，数据目录应该放在根目录下（(如： C:或者 D:等 )。创建一个data的文件夹，然后在data文件夹里创建db文件夹。</p>
+<p>为了从命令提示符（cmd）下运行 MongoDB 服务器，你必须从 MongoDB 目录的 bin 目录中执行 mongod.exe 文件。</p>
+<p>输入如下的命令启动mongodb服务：（我是安装到D盘了）</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">D</span><span class="p">:</span><span class="o">/</span><span class="n">mongodb</span><span class="o">/</span><span class="nb">bin</span><span class="o">&gt;</span><span class="n">mongod</span> <span class="o">--</span><span class="n">dbpath</span> <span class="n">D</span><span class="p">:</span>\<span class="n">mongodb</span>\<span class="n">data</span>\<span class="n">db</span>
+</pre></div>
+</div>
+<p>如果执行成功，会输出如下信息：</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span>2015-09-25T15:54:09.212+0800 I CONTROL  Hotfix KB2731284 or later update is not
+installed, will zero-out data files
+2015-09-25T15:54:09.229+0800 I JOURNAL  [initandlisten] journal dir=c:\data\db\j
+ournal
+2015-09-25T15:54:09.237+0800 I JOURNAL  [initandlisten] recover : no journal fil
+es present, no recovery needed
+2015-09-25T15:54:09.290+0800 I JOURNAL  [durability] Durability thread started
+2015-09-25T15:54:09.294+0800 I CONTROL  [initandlisten] MongoDB starting : pid=2
+488 port=27017 dbpath=c:\data\db 64-bit host=WIN-1VONBJOCE88
+2015-09-25T15:54:09.296+0800 I CONTROL  [initandlisten] targetMinOS: Windows 7/W
+indows Server 2008 R2
+2015-09-25T15:54:09.298+0800 I CONTROL  [initandlisten] db version v3.0.6
+……
+</pre></div>
+</div>
+<p>要看下是否开启成功，mongodb采用27017端口，那么我们就在浏览器里面键入http://localhost:27017/。</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">It</span> <span class="n">looks</span> <span class="n">like</span> <span class="n">you</span> <span class="n">are</span> <span class="n">trying</span> <span class="n">to</span> <span class="n">access</span> <span class="n">MongoDB</span> <span class="n">over</span> <span class="n">HTTP</span> <span class="n">on</span> <span class="n">the</span> <span class="n">native</span> <span class="n">driver</span> <span class="n">port</span>
+</pre></div>
+</div>
+<p>如果你需要进入MongoDB后台管理，你需要先打开mongodb装目录的下的bin目录，然后执行mongo.exe文件，MongoDBShell是MongoDB自带的交互式Javascript shell,用来对MongoDB进行操作和管理的交互式环境。</p>
+<p>当你进入mongoDB后台后，它默认会链接到 test 文档（数据库）</p>
+</div>
+<div class="section" id="mongodbwindows">
+<h2>将MongoDB设置成Windows服务<a class="headerlink" href="#mongodbwindows" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic">
+<li><p class="first">在d:mongodbdata下新建文件夹log（存放日志文件）并且新建文件mongodb.log</p>
+</li>
+<li><dl class="first docutils">
+<dt>在d:mongodb新建文件mongo.config</dt>
+<dd><p class="first">用记事本打开mongo.config输入：</p>
+<p>dbpath=D:\mongodb\data\db</p>
+<p class="last">logpath=D:\mongodb\data\log\mongodb.log</p>
+</dd>
+</dl>
+</li>
+</ol>
+<p>3. 用管理员身份打开cmd命令行，进入D:mongodbbin目录，输入如下的命令：</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">mongod</span> <span class="o">--</span><span class="n">config</span> <span class="n">D</span><span class="p">:</span>\<span class="n">mongodb</span>\<span class="n">mongo</span><span class="o">.</span><span class="n">config</span> <span class="o">--</span><span class="n">install</span> <span class="o">--</span><span class="n">serviceName</span> <span class="s2">&quot;MongoDB&quot;</span>
+</pre></div>
+</div>
+<p>如图结果存放在日志文件中，查看日志发现已经成功。如果失败有可能没有使用管理员身份，遭到拒绝访问。</p>
+<ol class="arabic simple" start="4">
+<li>打开cmd输入services.msc查看服务可以看到MongoDB服务，点击可以启动。</li>
+</ol>
+</div>
+<div class="section" id="gui">
+<h2>GUI<a class="headerlink" href="#gui" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><ul class="simple">
+<li>网页式,由Django和jQuery所构成。</li>
+<li>一个CouchDB Futon web的mongodb山寨版。</li>
+<li>Ruby写成。</li>
+<li>适用于OSX的应用程序。</li>
+<li>一个基于浏览器的MongoDB控制台, 由PHP撰写而成。</li>
+<li>Windows的mongodb管理工具</li>
+<li>最好的PHP语言的MongoDB管理工具，轻量级, 支持多国语言.</li>
+</ul>
+</div></blockquote>
+<p>教程给的是Rockmongo 下载地址：<a class="reference external" href="http://rockmongo.com/downloads">http://rockmongo.com/downloads</a></p>
+<p>而我用的是Robo 3T         <a class="reference external" href="https://robomongo.org/">https://robomongo.org/</a>。</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">Python</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="list1.html">NoSQL简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="list2.html">MongoDB简介</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">安装MongoDB</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#id1">安装</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id2">运行</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#mongodbwindows">将MongoDB设置成Windows服务</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#gui">GUI</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="list4.html">基本操作</a></li>
+<li class="toctree-l1"><a class="reference internal" href="list5.html">排序、索引、聚合</a></li>
+<li class="toctree-l1"><a class="reference internal" href="list6.html">引用和嵌入</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="list2.html" title="previous chapter">MongoDB简介</a></li>
+      <li>Next: <a href="list4.html" title="next chapter">基本操作</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2017, lishuang.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+      |
+      <a href="_sources/list3.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

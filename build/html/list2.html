@@ -1,0 +1,180 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>MongoDB简介 &#8212; Python 1.0.0 documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="安装MongoDB" href="list3.html" />
+    <link rel="prev" title="NoSQL简介" href="list1.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="mongodb">
+<h1>MongoDB简介<a class="headerlink" href="#mongodb" title="Permalink to this headline">¶</a></h1>
+<p>现在说说MongoDB的情况，MongoDB的名字由来，HumongousDatabase=MongoDB，中文意思就是巨大无比的数据库，顾名思义，MongoDB就是为处理大数据而生，以解决海量数据的存储和高效查询使用为使命。可以看出，它的使命不是为替代关系型数据库为目的，而是为对关系型数据库的补充。</p>
+<p>MongoDB是一个基于分布式文件存储的数据库。由C++语言编写。旨在为WEB应用提供可扩展的高性能数据存储解决方案。MongoDB是一个介于关系数据库和非关系数据库之间的产品，是非关系数据库当中功能最丰富，最像关系数据库的。</p>
+<p>集合存在于数据库中，集合没有固定的结构，这意味着你在对集合可以插入不同格式和类型的数据，但通常情况下我们插入集合的数据都会有一定的关联性。</p>
+<p>mongodb文档存储一般用类似json的格式存储，存储的内容是文档型的。这样也就有有机会对某些字段建立索引，实现关系数据库的某些功能。MongoDB将数据存储为一个文档，数据结构由键值(key=&gt;value)对组成。字段值可以包含其他文档，数组及文档数组。所有存储在集合中的数据都是BSON格式。BSON是一种类json的一种二进制形式的存储格式,简称BinaryJSON。文档是一组键值(key-value)对(即BSON)。MongoDB的文档不需要设置相同的字段，并且相同的字段不需要相同的数据类型，这与关系型数据库有很大的区别，也是 MongoDB 非常突出的特点.</p>
+<div class="section" id="mysql">
+<h2>与Mysql的结构对比<a class="headerlink" href="#mysql" title="Permalink to this headline">¶</a></h2>
+<p>mongodb与mysql对比 传统的关系数据库一般由数据库（database）、表（table）、记录（record）三个层次概念组成。</p>
+<p>MongoDB是由数据库（database）、集合（collection）、文档对象（document）三个层次组成。</p>
+<p>MongoDB集合对于关系型数据库里的表，但是集合中没有列、行和关系概念，这体现了模式自由的特点。这也许是mongoDB介于关系数据库和非关系的之间的，又在非关系之间最像关系数据库的。</p>
+</div>
+<div class="section" id="id1">
+<h2>MongoDB主要特点<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic simple">
+<li>MongoDB的提供了一个面向文档存储，操作起来比较简单和容易。</li>
+<li>你可以在MongoDB记录中设置任何属性的索引 (如：FirstName=”Sameer”,Address=”8 Gandhi Road”)来实现更快的排序。</li>
+<li>你可以通过本地或者网络创建数据镜像，这使得MongoDB有更强的扩展性。</li>
+<li>如果负载的增加（需要更多的存储空间和更强的处理能力） ，它可以分布在计算机网络中的其他节点上这就是所谓的分片。</li>
+<li>Mongo支持丰富的查询表达式。查询指令使用JSON形式的标记，可轻易查询文档中内嵌的对象及数组。</li>
+<li>MongoDb 使用update()命令可以实现替换完成的文档（数据）或者一些指定的数据字段 。</li>
+<li>Mongodb中的Map/reduce主要是用来对数据进行批量处理和聚合操作。</li>
+<li>Map和Reduce。Map函数调用emit(key,value)遍历集合中所有的记录，将key与value传给Reduce函数进行处理。</li>
+<li>Map函数和Reduce函数是使用Javascript编写的，并可以通过db.runCommand或mapreduce命令来执行MapReduce操作。</li>
+<li>GridFS是MongoDB中的一个内置功能，可以用于存放大量小文件。</li>
+<li>MongoDB允许在服务端执行脚本，可以用Javascript编写某个函数，直接在服务端执行，也可以把函数的定义存储在服务端，下次直接调用即可。</li>
+<li>MongoDB支持各种编程语言:RUBY，PYTHON，JAVA，C++，PHP，C#等多种语言。</li>
+<li>MongoDB安装简单。</li>
+</ol>
+</div>
+<div class="section" id="id2">
+<h2>MongoDB<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id3">
+<h3>数据存储<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
+<p>MongoDB是面向集合（collection）的，集合中又包含多个文档（document），并支持对象型数据的存储。其中集合和文档的概念，在关系型数据库中类似于表（table）和元组（row：也就是所谓的一行数据）。</p>
+</div>
+<div class="section" id="id4">
+<h3>数据结构<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h3>
+<dl class="docutils">
+<dt>MongoDB对数据结构的支持非常灵活，从横向到纵向的支持都很好，比如下面的数据都能存储在同一个集合中：</dt>
+<dd><ul class="first last simple">
+<li>{“name”: “wangwu”, “age”: 25}</li>
+<li>{“name”: “lisi”}</li>
+<li>{“state”: “激活”, “remark”: “无”}</li>
+<li>{“name”: 6, “age”: “你猜”}</li>
+</ul>
+</dd>
+</dl>
+<p>从上面的例子我们能看出，横向方面，支持字段的动态增减（如①和②），从纵向方面，支持字段数据类型混合存储（如①和④）。而在关系型数据库中这种方式的存储是绝对达不到的。</p>
+</div>
+<div class="section" id="id5">
+<h3>数据及表关系、结构浏览<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
+<p>MongoDB因为没什么特别好的GUI客户端，所以在数据浏览和表关系、结构浏览上是非常困难和笨拙的，关系型数据库在这方面上优势明显。</p>
+</div>
+<div class="section" id="id6">
+<h3>查询<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h3>
+<p>MongoDB的查询语句与关系型的sql语句有着很大的不同，或者说是两种风格，二者表现都很不错，MongoDB主要体现在灵活易用上，而sql则体现在功能全面强大上。</p>
+</div>
+<div class="section" id="id7">
+<h3>主外键关联<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h3>
+<p>MongoDB不支持主外键关联，也没有“约束”的概念。
+在插入数据的同时直接就会自动生成表!
+Id是自增的，自动生成的
+mongodb数据库中没有主外键关系，有的只是ref引用</p>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">Python</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="list1.html">NoSQL简介</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">MongoDB简介</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#mysql">与Mysql的结构对比</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id1">MongoDB主要特点</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id2">MongoDB</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="list3.html">安装MongoDB</a></li>
+<li class="toctree-l1"><a class="reference internal" href="list4.html">基本操作</a></li>
+<li class="toctree-l1"><a class="reference internal" href="list5.html">排序、索引、聚合</a></li>
+<li class="toctree-l1"><a class="reference internal" href="list6.html">引用和嵌入</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="list1.html" title="previous chapter">NoSQL简介</a></li>
+      <li>Next: <a href="list3.html" title="next chapter">安装MongoDB</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2017, lishuang.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+      |
+      <a href="_sources/list2.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

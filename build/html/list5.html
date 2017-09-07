@@ -1,0 +1,215 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>排序、索引、聚合 &#8212; Python 1.0.0 documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="引用和嵌入" href="list6.html" />
+    <link rel="prev" title="基本操作" href="list4.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="id1">
+<h1>排序、索引、聚合<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="id2">
+<h2>排序<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<p>命令：</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">db</span><span class="o">.</span><span class="n">person</span><span class="o">.</span><span class="n">find</span><span class="p">()</span><span class="o">.</span><span class="n">sort</span><span class="p">({</span><span class="n">KEY</span><span class="p">:</span><span class="mi">1</span><span class="p">})</span>
+</pre></div>
+</div>
+<p>在MongoDB中使用使用sort()方法对数据进行排序，sort()方法可以通过参数指定排序的字段，并使用 1 和 -1 来指定排序的方式，其中 1 为升序排列，而-1是用于降序排列。</p>
+</div>
+<div class="section" id="id3">
+<h2>索引<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
+<p>命令</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">db</span><span class="o">.</span><span class="n">person</span><span class="o">.</span><span class="n">ensureIndex</span><span class="p">({</span><span class="n">KEY</span><span class="p">:</span><span class="mi">1</span><span class="p">})</span>
+</pre></div>
+</div>
+<p>语法中 Key值为你要创建的索引字段，1为指定按升序创建索引，如果你想按降序来创建索引指定为-1即可。</p>
+<p>ensureIndex() 方法中你也可以设置使用多个字段创建索引（关系型数据库中称作复合索引）</p>
+<img alt="_images/ensureIndex.jpg" src="_images/ensureIndex.jpg" />
+<p>命令：</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">db</span><span class="o">.</span><span class="n">person</span><span class="o">.</span><span class="n">find</span><span class="p">({</span><span class="n">age</span><span class="p">:</span><span class="mi">23</span><span class="p">})</span><span class="o">.</span><span class="n">explain</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>explain 操作提供了查询信息，使用索引及查询统计等。有利于我们对索引的优化。</p>
+<p>也可以使用 hint 来强制 MongoDB 使用一个指定的索引。(我已经创建了age索引)</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">db</span><span class="o">.</span><span class="n">person</span><span class="o">.</span><span class="n">find</span><span class="p">({</span><span class="n">age</span><span class="p">:</span><span class="mi">23</span><span class="p">})</span><span class="o">.</span><span class="n">hint</span><span class="p">({</span><span class="n">age</span><span class="p">:</span><span class="mi">1</span><span class="p">})</span><span class="o">.</span><span class="n">explain</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="section" id="id4">
+<h3>索引数组字段<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h3>
+<p>需要对集合中的数组字段建立索引。在数组中创建索引，需要对数组中的每个字段依次建立索引。</p>
+</div>
+<div class="section" id="id5">
+<h3>索引子文档字段<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
+<p>字段是子文档的字段，所以我们需要对子文档建立索引。为子文档的三个字段创建索引</p>
+</div>
+<div class="section" id="id6">
+<h3>索引限制<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h3>
+<ol class="arabic simple">
+<li>每个索引占据一定的存储空间，在进行插入，更新和删除操作时也需要对索引进行操作。所以，如果你很少对集合进行读取操作，建议不使用索引。</li>
+<li>由于索引是存储在内存(RAM)中,你应该确保该索引的大小不超过内存的限制。如果索引的大小大于内存的限制，MongoDB会删除一些索引，这将导致性能下降。</li>
+<li>索引不能被以下的查询使用：</li>
+</ol>
+<blockquote>
+<div><p>正则表达式及非操作符，如 $nin, $not, 等。</p>
+<p>算术运算符，如 $mod, 等。</p>
+<p>$where 子句。</p>
+<p>所以，检测你的语句是否使用索引是一个好的习惯，可以用explain来查看。</p>
+</div></blockquote>
+<ol class="arabic simple" start="4">
+<li>如果现有的索引字段的值超过索引键的限制，MongoDB中不会创建索引。</li>
+<li>如果文档的索引字段值超过了索引键的限制，MongoDB不会将任何文档转换成索引的集合。与mongorestore和mongoimport工具类似。</li>
+<li>集合中索引不能超过64个</li>
+</ol>
+<blockquote>
+<div><p>索引名的长度不能超过128个字符</p>
+<p>一个复合索引最多可以有31个字段</p>
+</div></blockquote>
+</div>
+</div>
+<div class="section" id="id7">
+<h2>聚合<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h2>
+<p>MongoDB中聚合(aggregate)主要用于处理数据(诸如统计平均值,求和等)，并返回计算后的数据结果。有点类似sql语句中的 count(*)。</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">db</span><span class="o">.</span><span class="n">person</span><span class="o">.</span><span class="n">aggregate</span><span class="p">(</span><span class="n">OPERATION</span><span class="p">)</span>
+</pre></div>
+</div>
+<img alt="_images/aggregate.jpg" src="_images/aggregate.jpg" />
+<p>MongoDB的聚合管道将MongoDB文档在一个管道处理完毕后将结果传递给下一个管道处理。管道操作是可以重复的。</p>
+<p>表达式：处理输入文档并输出。表达式是无状态的，只能用于计算当前聚合管道的文档，不能处理其它的文档。</p>
+<dl class="docutils">
+<dt>介绍一下聚合框架中常用的几个操作：</dt>
+<dd><ul class="first last simple">
+<li>$project：修改输入文档的结构。可以用来重命名、增加或删除域，也可以用于创建计算结果以及嵌套文档。</li>
+<li>$match：用于过滤数据，只输出符合条件的文档。$match使用MongoDB的标准查询操作。</li>
+<li>$limit：用来限制MongoDB聚合管道返回的文档数。</li>
+<li>$skip：在聚合管道中跳过指定数量的文档，并返回余下的文档。</li>
+<li>$unwind：将文档中的某一个数组类型字段拆分成多条，每条包含数组中的一个值。</li>
+<li>$group：将集合中的文档分组，可用于统计结果。</li>
+<li>$sort：将输入文档排序后输出。</li>
+<li>$geoNear：输出接近某一地理位置的有序文档。</li>
+</ul>
+</dd>
+</dl>
+<p>命令：</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span>db.person.aggregate(
+   { $project : {
+       age : 1 ,
+       name : 1 ,
+   }}
+);
+</pre></div>
+</div>
+<p>查询age和name</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span>db.articles.aggregate( [
+                       { $match : { age : { $gt : 20, $lte : 30 } } },
+                       { $group: { _id: null, count: { $sum: 1 } } }
+                      ] );
+</pre></div>
+</div>
+<p>$match用于获取年龄大于20小于或等于30记录，然后将符合条件的记录送到下一阶段$group管道操作符进行处理。</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">Python</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="list1.html">NoSQL简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="list2.html">MongoDB简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="list3.html">安装MongoDB</a></li>
+<li class="toctree-l1"><a class="reference internal" href="list4.html">基本操作</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">排序、索引、聚合</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#id2">排序</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id3">索引</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id7">聚合</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="list6.html">引用和嵌入</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="list4.html" title="previous chapter">基本操作</a></li>
+      <li>Next: <a href="list6.html" title="next chapter">引用和嵌入</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2017, lishuang.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+      |
+      <a href="_sources/list5.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

@@ -1,0 +1,642 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>SpringData MongoDB &#8212; Python 1.0.0 documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="&lt;no title&gt;" href="list10.html" />
+    <link rel="prev" title="MongoDB JDBC" href="list8.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="springdata-mongodb">
+<h1>SpringData MongoDB<a class="headerlink" href="#springdata-mongodb" title="Permalink to this headline">¶</a></h1>
+<p>整合MongoDB的框架还有Morphia，有兴趣的可以上网看看，网上也有别的乱七八糟框架的，这里简单地说下SpringData。</p>
+<p>项目git地址：<a class="reference external" href="https://code.csdn.net/qq_16313365/demo-springdata-mongo/tree/master">https://code.csdn.net/qq_16313365/demo-springdata-mongo/tree/master</a>。</p>
+<p>官方文档：<a class="reference external" href="https://docs.spring.io/spring-data/mongodb/docs/1.7.0.RELEASE/reference/html/">https://docs.spring.io/spring-data/mongodb/docs/1.7.0.RELEASE/reference/html/</a>。</p>
+<p>spring Data MongoDB 项目提供与mongodb文档数据库的集成。Spring Data MongoDB POJO的关键功能区域为中心的模型与MongoDB的DBCollection轻松地编写一个存储库交互数据访问。</p>
+<p>【pom.xml】</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span>1.      &lt;project xmlns=&quot;http://maven.apache.org/POM/4.0.0&quot; xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+2.          xsi:schemaLocation=&quot;http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd&quot;&gt;
+3.          &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;
+4.
+5.          &lt;groupId&gt;com.jastar&lt;/groupId&gt;
+6.          &lt;artifactId&gt;demo&lt;/artifactId&gt;
+7.          &lt;version&gt;0.0.1-SNAPSHOT&lt;/version&gt;
+8.          &lt;packaging&gt;jar&lt;/packaging&gt;
+9.
+10.         &lt;name&gt;demo&lt;/name&gt;
+11.         &lt;url&gt;http://www.jastar-wang.tech&lt;/url&gt;
+12.
+13.         &lt;!-- 版本配置 --&gt;
+14.         &lt;properties&gt;
+15.             &lt;spring.version&gt;4.1.4.RELEASE&lt;/spring.version&gt;
+16.             &lt;spring.data.version&gt;1.7.0.RELEASE&lt;/spring.data.version&gt;
+17.             &lt;log4j.version&gt;1.2.17&lt;/log4j.version&gt;
+18.         &lt;/properties&gt;
+19.
+20.         &lt;dependencies&gt;
+21.             &lt;!-- 单元测试包 --&gt;
+22.             &lt;dependency&gt;
+23.                 &lt;groupId&gt;junit&lt;/groupId&gt;
+24.                 &lt;artifactId&gt;junit&lt;/artifactId&gt;
+25.                 &lt;version&gt;4.10&lt;/version&gt;
+26.                 &lt;scope&gt;test&lt;/scope&gt;
+27.             &lt;/dependency&gt;
+28.
+29.             &lt;!-- spring核心包 --&gt;
+30.             &lt;dependency&gt;
+31.                 &lt;groupId&gt;org.springframework&lt;/groupId&gt;
+32.                 &lt;artifactId&gt;spring-core&lt;/artifactId&gt;
+33.                 &lt;version&gt;${spring.version}&lt;/version&gt;
+34.             &lt;/dependency&gt;
+35.             &lt;dependency&gt;
+36.                 &lt;groupId&gt;org.springframework&lt;/groupId&gt;
+37.                 &lt;artifactId&gt;spring-context&lt;/artifactId&gt;
+38.                 &lt;version&gt;${spring.version}&lt;/version&gt;
+39.             &lt;/dependency&gt;
+40.             &lt;dependency&gt;
+41.                 &lt;groupId&gt;org.springframework&lt;/groupId&gt;
+42.                 &lt;artifactId&gt;spring-beans&lt;/artifactId&gt;
+43.                 &lt;version&gt;${spring.version}&lt;/version&gt;
+44.             &lt;/dependency&gt;
+45.             &lt;dependency&gt;
+46.                 &lt;groupId&gt;org.springframework&lt;/groupId&gt;
+47.                 &lt;artifactId&gt;spring-tx&lt;/artifactId&gt;
+48.                 &lt;version&gt;${spring.version}&lt;/version&gt;
+49.             &lt;/dependency&gt;
+50.             &lt;dependency&gt;
+51.                 &lt;groupId&gt;org.springframework&lt;/groupId&gt;
+52.                 &lt;artifactId&gt;spring-webmvc&lt;/artifactId&gt;
+53.                 &lt;version&gt;${spring.version}&lt;/version&gt;
+54.             &lt;/dependency&gt;
+55.             &lt;dependency&gt;
+56.                 &lt;groupId&gt;org.springframework&lt;/groupId&gt;
+57.                 &lt;artifactId&gt;spring-aop&lt;/artifactId&gt;
+58.                 &lt;version&gt;${spring.version}&lt;/version&gt;
+59.             &lt;/dependency&gt;
+60.             &lt;dependency&gt;
+61.                 &lt;groupId&gt;org.springframework&lt;/groupId&gt;
+62.                 &lt;artifactId&gt;spring-test&lt;/artifactId&gt;
+63.                 &lt;version&gt;${spring.version}&lt;/version&gt;
+64.             &lt;/dependency&gt;
+65.
+66.             &lt;!-- 关系型数据库整合时需配置 如hibernate jpa等 --&gt;
+67.             &lt;dependency&gt;
+68.                 &lt;groupId&gt;org.springframework&lt;/groupId&gt;
+69.                 &lt;artifactId&gt;spring-orm&lt;/artifactId&gt;
+70.                 &lt;version&gt;${spring.version}&lt;/version&gt;
+71.             &lt;/dependency&gt;
+72.
+73.             &lt;!-- spring aop 关联 --&gt;
+74.             &lt;dependency&gt;
+75.                 &lt;groupId&gt;org.aspectj&lt;/groupId&gt;
+76.                 &lt;artifactId&gt;aspectjweaver&lt;/artifactId&gt;
+77.                 &lt;version&gt;1.8.7&lt;/version&gt;
+78.             &lt;/dependency&gt;
+79.
+80.             &lt;!-- log4j --&gt;
+81.             &lt;dependency&gt;
+82.                 &lt;groupId&gt;log4j&lt;/groupId&gt;
+83.                 &lt;artifactId&gt;log4j&lt;/artifactId&gt;
+84.                 &lt;version&gt;${log4j.version}&lt;/version&gt;
+85.             &lt;/dependency&gt;
+86.
+87.             &lt;!-- spring整合MongoDB --&gt;
+88.             &lt;dependency&gt;
+89.                 &lt;groupId&gt;org.springframework.data&lt;/groupId&gt;
+90.                 &lt;artifactId&gt;spring-data-mongodb&lt;/artifactId&gt;
+91.                 &lt;version&gt;${spring.data.version}&lt;/version&gt;
+92.             &lt;/dependency&gt;
+93.
+94.         &lt;/dependencies&gt;
+95.
+96.         &lt;repositories&gt;
+97.             &lt;repository&gt;
+98.                 &lt;id&gt;spring-milestone&lt;/id&gt;
+99.                 &lt;name&gt;Spring Maven MILESTONE Repository&lt;/name&gt;
+100.                &lt;url&gt;http://repo.spring.io/libs-milestone&lt;/url&gt;
+101.            &lt;/repository&gt;
+102.        &lt;/repositories&gt;
+103.
+104.        &lt;build&gt;
+105.            &lt;plugins&gt;
+106.                &lt;plugin&gt;
+107.                    &lt;groupId&gt;org.apache.maven.plugins&lt;/groupId&gt;
+108.                    &lt;artifactId&gt;maven-compiler-plugin&lt;/artifactId&gt;
+109.                    &lt;configuration&gt;
+110.                        &lt;source&gt;1.7&lt;/source&gt;
+111.                        &lt;target&gt;1.7&lt;/target&gt;
+112.                    &lt;/configuration&gt;
+113.                &lt;/plugin&gt;
+114.            &lt;/plugins&gt;
+115.        &lt;/build&gt;
+116.    &lt;/project&gt;
+</pre></div>
+</div>
+<p>实体类【UserInfo.java】</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="mf">1.</span>      <span class="n">package</span> <span class="n">com</span><span class="o">.</span><span class="n">jastar</span><span class="o">.</span><span class="n">demo</span><span class="o">.</span><span class="n">entity</span><span class="p">;</span>
+<span class="mf">2.</span>
+<span class="mf">3.</span>      <span class="kn">import</span> <span class="nn">java.io.Serializable</span><span class="p">;</span>
+<span class="mf">4.</span>      <span class="kn">import</span> <span class="nn">java.sql.Timestamp</span><span class="p">;</span>
+<span class="mf">5.</span>
+<span class="mf">6.</span>      <span class="kn">import</span> <span class="nn">org.springframework.data.annotation.Id</span><span class="p">;</span>
+<span class="mf">7.</span>      <span class="kn">import</span> <span class="nn">org.springframework.data.mongodb.core.index.IndexDirection</span><span class="p">;</span>
+<span class="mf">8.</span>      <span class="kn">import</span> <span class="nn">org.springframework.data.mongodb.core.index.Indexed</span><span class="p">;</span>
+<span class="mf">9.</span>      <span class="kn">import</span> <span class="nn">org.springframework.data.mongodb.core.mapping.Document</span><span class="p">;</span>
+<span class="mf">10.</span>     <span class="kn">import</span> <span class="nn">org.springframework.data.mongodb.core.mapping.Field</span><span class="p">;</span>
+<span class="mf">11.</span>
+<span class="mf">12.</span>     <span class="o">/**</span>
+<span class="mf">13.</span>      <span class="o">*</span> <span class="n">用户实体类</span>
+<span class="mf">14.</span>      <span class="o">*</span> <span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>
+<span class="mf">15.</span>      <span class="o">*</span> <span class="n">ClassName</span><span class="p">:</span> <span class="n">UserInfo</span>
+<span class="mf">16.</span>      <span class="o">*</span> <span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+<span class="mf">17.</span>      <span class="o">*</span> <span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>
+<span class="mf">18.</span>      <span class="o">*</span> <span class="n">Description</span><span class="p">:</span><span class="n">本类用来展示MongoDB实体类映射的使用</span>
+<span class="mf">19.</span>      <span class="o">*</span> <span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+<span class="mf">20.</span>      <span class="o">*</span> <span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>
+<span class="mf">21.</span>      <span class="o">*</span> <span class="n">Copyright</span><span class="p">:</span> <span class="p">(</span><span class="n">c</span><span class="p">)</span><span class="mi">2017</span> <span class="n">Jastar·Wang</span><span class="p">,</span><span class="n">All</span> <span class="n">rights</span> <span class="n">reserved</span><span class="o">.</span>
+<span class="mf">22.</span>      <span class="o">*</span> <span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+<span class="mf">23.</span>      <span class="o">*</span>
+<span class="mf">24.</span>      <span class="o">*</span> <span class="nd">@author</span> <span class="n">Jastar·Wang</span>
+<span class="mf">25.</span>      <span class="o">*</span> <span class="nd">@date</span> <span class="mi">2017</span><span class="n">年4月12日</span>
+<span class="mf">26.</span>      <span class="o">*/</span>
+<span class="mf">27.</span>     <span class="nd">@Document</span><span class="p">(</span><span class="n">collection</span> <span class="o">=</span> <span class="s2">&quot;coll_user&quot;</span><span class="p">)</span>
+<span class="mf">28.</span>     <span class="n">public</span> <span class="k">class</span> <span class="nc">UserInfo</span> <span class="n">implements</span> <span class="n">Serializable</span> <span class="p">{</span>
+<span class="mf">29.</span>
+<span class="mf">30.</span>         <span class="o">/**</span> <span class="n">serialVersionUID</span> <span class="o">*/</span>
+<span class="mf">31.</span>         <span class="n">private</span> <span class="n">static</span> <span class="n">final</span> <span class="n">long</span> <span class="n">serialVersionUID</span> <span class="o">=</span> <span class="mi">1</span><span class="n">L</span><span class="p">;</span>
+<span class="mf">32.</span>
+<span class="mf">33.</span>         <span class="o">//</span> <span class="n">主键使用此注解</span>
+<span class="mf">34.</span>         <span class="nd">@Id</span>
+<span class="mf">35.</span>         <span class="n">private</span> <span class="n">String</span> <span class="nb">id</span><span class="p">;</span>
+<span class="mf">36.</span>
+<span class="mf">37.</span>         <span class="o">//</span> <span class="n">字段使用此注解</span>
+<span class="mf">38.</span>         <span class="nd">@Field</span>
+<span class="mf">39.</span>         <span class="n">private</span> <span class="n">String</span> <span class="n">name</span><span class="p">;</span>
+<span class="mf">40.</span>
+<span class="mf">41.</span>         <span class="o">//</span> <span class="n">字段还可以用自定义名称</span>
+<span class="mf">42.</span>         <span class="nd">@Field</span><span class="p">(</span><span class="s2">&quot;myage&quot;</span><span class="p">)</span>
+<span class="mf">43.</span>         <span class="n">private</span> <span class="nb">int</span> <span class="n">age</span><span class="p">;</span>
+<span class="mf">44.</span>
+<span class="mf">45.</span>         <span class="o">//</span> <span class="n">还可以生成索引</span>
+<span class="mf">46.</span>         <span class="nd">@Indexed</span><span class="p">(</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;index_birth&quot;</span><span class="p">,</span> <span class="n">direction</span> <span class="o">=</span> <span class="n">IndexDirection</span><span class="o">.</span><span class="n">DESCENDING</span><span class="p">)</span>
+<span class="mf">47.</span>         <span class="nd">@Field</span>
+<span class="mf">48.</span>         <span class="n">private</span> <span class="n">Timestamp</span> <span class="n">birth</span><span class="p">;</span>
+<span class="mf">49.</span>
+<span class="mf">50.</span>         <span class="n">public</span> <span class="n">String</span> <span class="n">getId</span><span class="p">()</span> <span class="p">{</span>
+<span class="mf">51.</span>             <span class="k">return</span> <span class="nb">id</span><span class="p">;</span>
+<span class="mf">52.</span>         <span class="p">}</span>
+<span class="mf">53.</span>
+<span class="mf">54.</span>         <span class="n">public</span> <span class="n">void</span> <span class="n">setId</span><span class="p">(</span><span class="n">String</span> <span class="nb">id</span><span class="p">)</span> <span class="p">{</span>
+<span class="mf">55.</span>             <span class="n">this</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="nb">id</span><span class="p">;</span>
+<span class="mf">56.</span>         <span class="p">}</span>
+<span class="mf">57.</span>
+<span class="mf">58.</span>         <span class="n">public</span> <span class="n">String</span> <span class="n">getName</span><span class="p">()</span> <span class="p">{</span>
+<span class="mf">59.</span>             <span class="k">return</span> <span class="n">name</span><span class="p">;</span>
+<span class="mf">60.</span>         <span class="p">}</span>
+<span class="mf">61.</span>
+<span class="mf">62.</span>         <span class="n">public</span> <span class="n">void</span> <span class="n">setName</span><span class="p">(</span><span class="n">String</span> <span class="n">name</span><span class="p">)</span> <span class="p">{</span>
+<span class="mf">63.</span>             <span class="n">this</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span><span class="p">;</span>
+<span class="mf">64.</span>         <span class="p">}</span>
+<span class="mf">65.</span>
+<span class="mf">66.</span>         <span class="n">public</span> <span class="nb">int</span> <span class="n">getAge</span><span class="p">()</span> <span class="p">{</span>
+<span class="mf">67.</span>             <span class="k">return</span> <span class="n">age</span><span class="p">;</span>
+<span class="mf">68.</span>         <span class="p">}</span>
+<span class="mf">69.</span>
+<span class="mf">70.</span>         <span class="n">public</span> <span class="n">void</span> <span class="n">setAge</span><span class="p">(</span><span class="nb">int</span> <span class="n">age</span><span class="p">)</span> <span class="p">{</span>
+<span class="mf">71.</span>             <span class="n">this</span><span class="o">.</span><span class="n">age</span> <span class="o">=</span> <span class="n">age</span><span class="p">;</span>
+<span class="mf">72.</span>         <span class="p">}</span>
+<span class="mf">73.</span>
+<span class="mf">74.</span>         <span class="n">public</span> <span class="n">Timestamp</span> <span class="n">getBirth</span><span class="p">()</span> <span class="p">{</span>
+<span class="mf">75.</span>             <span class="k">return</span> <span class="n">birth</span><span class="p">;</span>
+<span class="mf">76.</span>         <span class="p">}</span>
+<span class="mf">77.</span>
+<span class="mf">78.</span>         <span class="n">public</span> <span class="n">void</span> <span class="n">setBirth</span><span class="p">(</span><span class="n">Timestamp</span> <span class="n">birth</span><span class="p">)</span> <span class="p">{</span>
+<span class="mf">79.</span>             <span class="n">this</span><span class="o">.</span><span class="n">birth</span> <span class="o">=</span> <span class="n">birth</span><span class="p">;</span>
+<span class="mf">80.</span>         <span class="p">}</span>
+<span class="mf">81.</span>
+<span class="mf">82.</span>     <span class="p">}</span>
+</pre></div>
+</div>
+<dl class="docutils">
+<dt>附录：</dt>
+<dd><ul class="first last simple">
+<li>&#64;Id - 用于字段级别，标记这个字段是一个主键，默认生成的名称是“_id”</li>
+<li>&#64;Document - 用于类，以表示这个类需要映射到数据库，您也可以指定映射到数据库的集合名称</li>
+<li>&#64;DBRef - 用于字段，以表示它将使用com.mongodb.DBRef进行存储。</li>
+<li>&#64;Indexed - 用于字段，表示该字段需要如何创建索引</li>
+<li>&#64;CompoundIndex - 用于类，以声明复合索引</li>
+<li>&#64;GeoSpatialIndexed - 用于字段，进行地理位置索引</li>
+<li>&#64;TextIndexed - 用于字段，标记该字段要包含在文本索引中</li>
+<li>&#64;Language - 用于字段，以设置文本索引的语言覆盖属性。</li>
+<li>&#64;Transient - 默认情况下，所有私有字段都映射到文档，此注解将会去除此字段的映射</li>
+<li>&#64;PersistenceConstructor - 标记一个给定的构造函数，即使是一个protected修饰的，在从数据库实例化对象时使用。构造函数参数通过名称映射到检索的DBObject中的键值。</li>
+<li>&#64;Value  这个注解是Spring框架的一部分。在映射框架内，它可以应用于构造函数参数。这允许您使用Spring表达式语言语句来转换在数据库中检索的键值，然后再用它来构造一个域对象。为了引用给定文档的属性，必须使用以下表达式：&#64;Value(“#root.myProperty”)，root要指向给定文档的根。</li>
+<li>&#64;Field - 用于字段，并描述字段的名称，因为它将在MongoDB BSON文档中表示，允许名称与该类的字段名不同。</li>
+<li>&#64;Version - 用于字段锁定，保存操作时检查修改。初始值是0，每次更新时自动触发。</li>
+</ul>
+</dd>
+</dl>
+<p>【db.properties】</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="mf">1.</span>      <span class="c1">###---The mongodb settings---</span>
+<span class="mf">2.</span>      <span class="n">mongo</span><span class="o">.</span><span class="n">dbname</span><span class="o">=</span><span class="n">demo</span>
+<span class="mf">3.</span>      <span class="n">mongo</span><span class="o">.</span><span class="n">host</span><span class="o">=</span><span class="n">localhost</span>
+<span class="mf">4.</span>      <span class="n">mongo</span><span class="o">.</span><span class="n">port</span><span class="o">=</span><span class="mi">27017</span>
+<span class="mf">5.</span>      <span class="n">mongo</span><span class="o">.</span><span class="n">connectionsPerHost</span><span class="o">=</span><span class="mi">8</span>
+<span class="mf">6.</span>      <span class="n">mongo</span><span class="o">.</span><span class="n">threadsAllowedToBlockForConnectionMultiplier</span><span class="o">=</span><span class="mi">4</span>
+<span class="mf">7.</span>      <span class="n">mongo</span><span class="o">.</span><span class="n">connectTimeout</span><span class="o">=</span><span class="mi">1000</span>
+<span class="mf">8.</span>      <span class="n">mongo</span><span class="o">.</span><span class="n">maxWaitTime</span><span class="o">=</span><span class="mi">1500</span>
+<span class="mf">9.</span>      <span class="n">mongo</span><span class="o">.</span><span class="n">autoConnectRetry</span><span class="o">=</span><span class="n">true</span>
+<span class="mf">10.</span>     <span class="n">mongo</span><span class="o">.</span><span class="n">socketKeepAlive</span><span class="o">=</span><span class="n">true</span>
+<span class="mf">11.</span>     <span class="n">mongo</span><span class="o">.</span><span class="n">socketTimeout</span><span class="o">=</span><span class="mi">1500</span>
+<span class="mf">12.</span>     <span class="n">mongo</span><span class="o">.</span><span class="n">slaveOk</span><span class="o">=</span><span class="n">true</span>
+<span class="mf">13.</span>     <span class="n">mongo</span><span class="o">.</span><span class="n">writeNumber</span><span class="o">=</span><span class="mi">1</span>
+<span class="mf">14.</span>     <span class="n">mongo</span><span class="o">.</span><span class="n">writeTimeout</span><span class="o">=</span><span class="mi">0</span>
+<span class="mf">15.</span>     <span class="n">mongo</span><span class="o">.</span><span class="n">writeFsync</span><span class="o">=</span><span class="n">true</span>
+</pre></div>
+</div>
+<p>【spring-mgo.xml】</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span>1.      &lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+2.      &lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot;
+3.          xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+4.          xmlns:context=&quot;http://www.springframework.org/schema/context&quot;
+5.          xmlns:mongo=&quot;http://www.springframework.org/schema/data/mongo&quot;
+6.          xsi:schemaLocation=&quot;http://www.springframework.org/schema/context
+7.                http://www.springframework.org/schema/context/spring-context-3.0.xsd
+8.                http://www.springframework.org/schema/data/mongo
+9.                http://www.springframework.org/schema/data/mongo/spring-mongo-1.0.xsd
+10.               http://www.springframework.org/schema/beans
+11.               http://www.springframework.org/schema/beans/spring-beans-3.0.xsd&quot;&gt;
+12.
+13.         &lt;!-- 读取属性文件 --&gt;
+14.         &lt;context:property-placeholder location=&quot;classpath:db.properties&quot; /&gt;
+15.
+16.         &lt;!-- 启用注解支持 --&gt;
+17.         &lt;context:annotation-config /&gt;
+18.
+19.         &lt;!-- 扫描组件包 --&gt;
+20.         &lt;context:component-scan base-package=&quot;com.jastar.demo&quot; /&gt;
+21.
+22.         &lt;!-- SpringData类型转换器 --&gt;
+23.         &lt;mongo:mapping-converter id=&quot;mongoConverter&quot;&gt;
+24.             &lt;mongo:custom-converters&gt;
+25.                 &lt;mongo:converter&gt;
+26.                     &lt;bean class=&quot;com.jastar.demo.converter.TimestampConverter&quot; /&gt;
+27.                 &lt;/mongo:converter&gt;
+28.             &lt;/mongo:custom-converters&gt;
+29.         &lt;/mongo:mapping-converter&gt;
+30.
+31.         &lt;!--
+32.             MongoDB配置部分
+33.             1.mongo：连接配置
+34.             2.db-factory：相当于sessionFactory
+35.             3.mongoTemplate：与数据库接口交互的主要实现类
+36.         --&gt;
+37.         &lt;mongo:mongo host=&quot;${mongo.host}&quot; port=&quot;${mongo.port}&quot;&gt;
+38.             &lt;mongo:options
+39.                 connections-per-host=&quot;${mongo.connectionsPerHost}&quot;
+40.                 threads-allowed-to-block-for-connection-multiplier=&quot;${mongo.threadsAllowedToBlockForConnectionMultiplier}&quot;
+41.                 connect-timeout=&quot;${mongo.connectTimeout}&quot;
+42.                 max-wait-time=&quot;${mongo.maxWaitTime}&quot;
+43.                 auto-connect-retry=&quot;${mongo.autoConnectRetry}&quot;
+44.                 socket-keep-alive=&quot;${mongo.socketKeepAlive}&quot;
+45.                 socket-timeout=&quot;${mongo.socketTimeout}&quot;
+46.                 slave-ok=&quot;${mongo.slaveOk}&quot;
+47.                 write-number=&quot;${mongo.writeNumber}&quot;
+48.                 write-timeout=&quot;${mongo.writeTimeout}&quot;
+49.                 write-fsync=&quot;${mongo.writeFsync}&quot; /&gt;
+50.         &lt;/mongo:mongo&gt;
+51.
+52.         &lt;mongo:db-factory id=&quot;mongoDbFactory&quot; dbname=&quot;${mongo.dbname}&quot; mongo-ref=&quot;mongo&quot; /&gt;
+53.
+54.         &lt;bean id=&quot;mongoTemplate&quot; class=&quot;org.springframework.data.mongodb.core.MongoTemplate&quot;&gt;
+55.             &lt;constructor-arg name=&quot;mongoDbFactory&quot; ref=&quot;mongoDbFactory&quot; /&gt;
+56.             &lt;constructor-arg name=&quot;mongoConverter&quot; ref=&quot;mongoConverter&quot; /&gt;
+57.         &lt;/bean&gt;
+58.
+59.     &lt;/beans&gt;
+</pre></div>
+</div>
+<dl class="docutils">
+<dt>说明：</dt>
+<dd><ul class="first last simple">
+<li>mongo:options - 用于配置一些数据库连接设置信息</li>
+<li>mongo:db-factory - 相当于Hibernate中的SessionFactory</li>
+<li>mongoTemplate - 非常重要，整个与数据库的交互操作全是靠他，相当于Hibernate的HibernateTemplate</li>
+</ul>
+</dd>
+</dl>
+<p>另外，以上配置中有一个类型转换器，因为Spring Data MongoDB本身默认时间类型是java.util.Date，如果实体字段含有java.sql.Timestamp类型，需要自定义转换器进行转换，否则后续操作会报错</p>
+<p>【BaseDaoImpl.Java】</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span>1.      package com.jastar.demo.dao.impl;
+2.
+3.      import static org.springframework.data.mongodb.core.query.Criteria.where;
+4.
+5.      import java.io.Serializable;
+6.      import java.lang.reflect.Field;
+7.      import java.lang.reflect.Method;
+8.      import java.lang.reflect.Modifier;
+9.      import java.util.ArrayList;
+10.     import java.util.HashMap;
+11.     import java.util.List;
+12.     import java.util.Map;
+13.
+14.     import org.springframework.beans.factory.annotation.Autowired;
+15.     import org.springframework.data.annotation.Id;
+16.     import org.springframework.data.domain.Sort;
+17.     import org.springframework.data.domain.Sort.Direction;
+18.     import org.springframework.data.domain.Sort.Order;
+19.     import org.springframework.data.mongodb.core.MongoTemplate;
+20.     import org.springframework.data.mongodb.core.query.Query;
+21.     import org.springframework.data.mongodb.core.query.Update;
+22.
+23.     import com.jastar.demo.dao.IBaseDao;
+24.     import com.jastar.demo.util.EmptyUtil;
+25.     import com.jastar.demo.util.PageModel;
+26.
+27.     /**
+28.      * 基本操作接口MongoDB数据库实现类
+29.      * &lt;p&gt;
+30.      * ClassName: BaseDaoImpl
+31.      * &lt;/p&gt;
+32.      * &lt;p&gt;
+33.      * Description:本实现类适用于MongoDB数据库，以下代码仅供参考，本人水平有限，可能会存在些许问题（如有更好方案可告知我，一定虚心学习），
+34.      * 再次提醒，仅供参考！！
+35.      * &lt;/p&gt;
+36.      * &lt;p&gt;
+37.      * Copyright: (c)2017 Jastar·Wang,All rights reserved.
+38.      * &lt;/p&gt;
+39.      *
+40.      * @author Jastar·Wang
+41.      * @date 2017年4月12日
+42.      */
+43.     public abstract class BaseDaoImpl&lt;T&gt; implements IBaseDao&lt;T&gt; {
+44.
+45.         protected abstract Class&lt;T&gt; getEntityClass();
+46.
+47.         @Autowired
+48.         protected MongoTemplate mgt;
+49.
+50.         @Override
+51.         public void save(T entity) {
+52.             mgt.save(entity);
+53.         }
+54.
+55.         @Override
+56.         public void update(T entity) {
+57.
+58.             // 反向解析对象
+59.             Map&lt;String, Object&gt; map = null;
+60.             try {
+61.                 map = parseEntity(entity);
+62.             } catch (Exception e) {
+63.                 e.printStackTrace();
+64.             }
+65.
+66.             // ID字段
+67.             String idName = null;
+68.             Object idValue = null;
+69.
+70.             // 生成参数
+71.             Update update = new Update();
+72.             if (EmptyUtil.isNotEmpty(map)) {
+73.                 for (String key : map.keySet()) {
+74.                     if (key.indexOf(&quot;{&quot;) != -1) {
+75.                         // 设置ID
+76.                         idName = key.substring(key.indexOf(&quot;{&quot;) + 1, key.indexOf(&quot;}&quot;));
+77.                         idValue = map.get(key);
+78.                     } else {
+79.                         update.set(key, map.get(key));
+80.                     }
+81.                 }
+82.             }
+83.             mgt.updateFirst(new Query().addCriteria(where(idName).is(idValue)), update, getEntityClass());
+84.         }
+85.
+86.         @Override
+87.         public void delete(Serializable... ids) {
+88.             if (EmptyUtil.isNotEmpty(ids)) {
+89.                 for (Serializable id : ids) {
+90.                     mgt.remove(mgt.findById(id, getEntityClass()));
+91.                 }
+92.             }
+93.
+94.         }
+95.
+96.         @Override
+97.         public T find(Serializable id) {
+98.             return mgt.findById(id, getEntityClass());
+99.         }
+100.
+101.        @Override
+102.        public List&lt;T&gt; findAll() {
+103.            return mgt.findAll(getEntityClass());
+104.        }
+105.
+106.        @Override
+107.        public List&lt;T&gt; findAll(String order) {
+108.            List&lt;Order&gt; orderList = parseOrder(order);
+109.            if (EmptyUtil.isEmpty(orderList)) {
+110.                return findAll();
+111.            }
+112.            return mgt.find(new Query().with(new Sort(orderList)), getEntityClass());
+113.        }
+114.
+115.        @Override
+116.        public List&lt;T&gt; findByProp(String propName, Object propValue) {
+117.            return findByProp(propName, propValue, null);
+118.        }
+119.
+120.        @Override
+121.        public List&lt;T&gt; findByProp(String propName, Object propValue, String order) {
+122.            Query query = new Query();
+123.            // 参数
+124.            query.addCriteria(where(propName).is(propValue));
+125.            // 排序
+126.            List&lt;Order&gt; orderList = parseOrder(order);
+127.            if (EmptyUtil.isNotEmpty(orderList)) {
+128.                query.with(new Sort(orderList));
+129.            }
+130.            return mgt.find(query, getEntityClass());
+131.        }
+</pre></div>
+</div>
+<p>update方法不像关系型数据库那样，给个实体类就能更新，需要自己去想办法搞定。（所以MongoDB都是用来读写的，存储一些信息的）</p>
+<p>【TestUseService.java】</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="mf">1.</span>      <span class="n">package</span> <span class="n">com</span><span class="o">.</span><span class="n">jastar</span><span class="o">.</span><span class="n">test</span><span class="p">;</span>
+<span class="mf">2.</span>
+<span class="mf">3.</span>      <span class="kn">import</span> <span class="nn">java.sql.Timestamp</span><span class="p">;</span>
+<span class="mf">4.</span>      <span class="kn">import</span> <span class="nn">java.util.List</span><span class="p">;</span>
+<span class="mf">5.</span>
+<span class="mf">6.</span>      <span class="kn">import</span> <span class="nn">org.junit.Test</span><span class="p">;</span>
+<span class="mf">7.</span>      <span class="kn">import</span> <span class="nn">org.junit.runner.RunWith</span><span class="p">;</span>
+<span class="mf">8.</span>      <span class="kn">import</span> <span class="nn">org.springframework.beans.factory.annotation.Autowired</span><span class="p">;</span>
+<span class="mf">9.</span>      <span class="kn">import</span> <span class="nn">org.springframework.test.context.ContextConfiguration</span><span class="p">;</span>
+<span class="mf">10.</span>     <span class="kn">import</span> <span class="nn">org.springframework.test.context.junit4.SpringJUnit4ClassRunner</span><span class="p">;</span>
+<span class="mf">11.</span>
+<span class="mf">12.</span>     <span class="kn">import</span> <span class="nn">com.jastar.demo.entity.UserInfo</span><span class="p">;</span>
+<span class="mf">13.</span>     <span class="kn">import</span> <span class="nn">com.jastar.demo.service.UserService</span><span class="p">;</span>
+<span class="mf">14.</span>     <span class="kn">import</span> <span class="nn">com.jastar.demo.util.PageModel</span><span class="p">;</span>
+<span class="mf">15.</span>
+<span class="mf">16.</span>     <span class="nd">@RunWith</span><span class="p">(</span><span class="n">SpringJUnit4ClassRunner</span><span class="o">.</span><span class="n">class</span><span class="p">)</span>
+<span class="mf">17.</span>     <span class="nd">@ContextConfiguration</span><span class="p">(</span><span class="n">locations</span> <span class="o">=</span> <span class="s2">&quot;classpath:spring-mgo.xml&quot;</span><span class="p">)</span>
+<span class="mf">18.</span>     <span class="n">public</span> <span class="k">class</span> <span class="nc">TestUserService</span> <span class="p">{</span>
+<span class="mf">19.</span>
+<span class="mf">20.</span>         <span class="nd">@Autowired</span>
+<span class="mf">21.</span>         <span class="n">private</span> <span class="n">UserService</span> <span class="n">service</span><span class="p">;</span>
+<span class="mf">22.</span>
+<span class="mf">23.</span>         <span class="nd">@Test</span>
+<span class="mf">24.</span>         <span class="n">public</span> <span class="n">void</span> <span class="n">save</span><span class="p">()</span> <span class="p">{</span>
+<span class="mf">25.</span>             <span class="n">UserInfo</span> <span class="n">user</span> <span class="o">=</span> <span class="n">new</span> <span class="n">UserInfo</span><span class="p">();</span>
+<span class="mf">26.</span>             <span class="n">user</span><span class="o">.</span><span class="n">setName</span><span class="p">(</span><span class="s2">&quot;张三&quot;</span><span class="p">);</span>
+<span class="mf">27.</span>             <span class="n">user</span><span class="o">.</span><span class="n">setAge</span><span class="p">(</span><span class="mi">25</span><span class="p">);</span>
+<span class="mf">28.</span>             <span class="n">user</span><span class="o">.</span><span class="n">setBirth</span><span class="p">(</span><span class="n">Timestamp</span><span class="o">.</span><span class="n">valueOf</span><span class="p">(</span><span class="s2">&quot;2017-4-12 16:52:00&quot;</span><span class="p">));</span>
+<span class="mf">29.</span>             <span class="n">service</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">user</span><span class="p">);</span>
+<span class="mf">30.</span>             <span class="n">System</span><span class="o">.</span><span class="n">out</span><span class="o">.</span><span class="n">println</span><span class="p">(</span><span class="s2">&quot;已生成ID:&quot;</span> <span class="o">+</span> <span class="n">user</span><span class="o">.</span><span class="n">getId</span><span class="p">());</span>
+<span class="mf">31.</span>         <span class="p">}</span>
+<span class="mf">32.</span>
+<span class="mf">33.</span>         <span class="nd">@Test</span>
+<span class="mf">34.</span>         <span class="n">public</span> <span class="n">void</span> <span class="n">find</span><span class="p">()</span> <span class="p">{</span>
+<span class="mf">35.</span>             <span class="n">UserInfo</span> <span class="n">user</span> <span class="o">=</span> <span class="n">service</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;58edf1b26f033406394a8a61&quot;</span><span class="p">);</span>
+<span class="mf">36.</span>             <span class="n">System</span><span class="o">.</span><span class="n">out</span><span class="o">.</span><span class="n">println</span><span class="p">(</span><span class="n">user</span><span class="o">.</span><span class="n">getName</span><span class="p">());</span>
+<span class="mf">37.</span>         <span class="p">}</span>
+<span class="mf">38.</span>
+<span class="mf">39.</span>         <span class="nd">@Test</span>
+<span class="mf">40.</span>         <span class="n">public</span> <span class="n">void</span> <span class="n">update</span><span class="p">()</span> <span class="p">{</span>
+<span class="mf">41.</span>             <span class="n">UserInfo</span> <span class="n">user</span> <span class="o">=</span> <span class="n">service</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;58edf1b26f033406394a8a61&quot;</span><span class="p">);</span>
+<span class="mf">42.</span>             <span class="n">user</span><span class="o">.</span><span class="n">setAge</span><span class="p">(</span><span class="mi">18</span><span class="p">);</span>
+<span class="mf">43.</span>             <span class="n">service</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">user</span><span class="p">);</span>
+<span class="mf">44.</span>         <span class="p">}</span>
+<span class="mf">45.</span>
+<span class="mf">46.</span>         <span class="nd">@Test</span>
+<span class="mf">47.</span>         <span class="n">public</span> <span class="n">void</span> <span class="n">delete</span><span class="p">()</span> <span class="p">{</span>
+<span class="mf">48.</span>             <span class="n">service</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="s2">&quot;58edef886f03c7b0fdba51b9&quot;</span><span class="p">);</span>
+<span class="mf">49.</span>         <span class="p">}</span>
+<span class="mf">50.</span>
+<span class="mf">51.</span>         <span class="nd">@Test</span>
+<span class="mf">52.</span>         <span class="n">public</span> <span class="n">void</span> <span class="n">findAll</span><span class="p">()</span> <span class="p">{</span>
+<span class="mf">53.</span>             <span class="n">List</span><span class="o">&lt;</span><span class="n">UserInfo</span><span class="o">&gt;</span> <span class="nb">list</span> <span class="o">=</span> <span class="n">service</span><span class="o">.</span><span class="n">findAll</span><span class="p">(</span><span class="s2">&quot;age desc&quot;</span><span class="p">);</span>
+<span class="mf">54.</span>             <span class="k">for</span> <span class="p">(</span><span class="n">UserInfo</span> <span class="n">u</span> <span class="p">:</span> <span class="nb">list</span><span class="p">)</span> <span class="p">{</span>
+<span class="mf">55.</span>                 <span class="n">System</span><span class="o">.</span><span class="n">out</span><span class="o">.</span><span class="n">println</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">getName</span><span class="p">());</span>
+<span class="mf">56.</span>             <span class="p">}</span>
+<span class="mf">57.</span>         <span class="p">}</span>
+<span class="mf">58.</span>
+<span class="mf">59.</span>         <span class="nd">@Test</span>
+<span class="mf">60.</span>         <span class="n">public</span> <span class="n">void</span> <span class="n">findByProp</span><span class="p">()</span> <span class="p">{</span>
+<span class="mf">61.</span>             <span class="n">List</span><span class="o">&lt;</span><span class="n">UserInfo</span><span class="o">&gt;</span> <span class="nb">list</span> <span class="o">=</span> <span class="n">service</span><span class="o">.</span><span class="n">findByProp</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="s2">&quot;张三&quot;</span><span class="p">);</span>
+<span class="mf">62.</span>             <span class="k">for</span> <span class="p">(</span><span class="n">UserInfo</span> <span class="n">u</span> <span class="p">:</span> <span class="nb">list</span><span class="p">)</span> <span class="p">{</span>
+<span class="mf">63.</span>                 <span class="n">System</span><span class="o">.</span><span class="n">out</span><span class="o">.</span><span class="n">println</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">getName</span><span class="p">());</span>
+<span class="mf">64.</span>             <span class="p">}</span>
+<span class="mf">65.</span>         <span class="p">}</span>
+<span class="mf">66.</span>
+<span class="mf">67.</span>         <span class="nd">@Test</span>
+<span class="mf">68.</span>         <span class="n">public</span> <span class="n">void</span> <span class="n">findByProps</span><span class="p">()</span> <span class="p">{</span>
+<span class="mf">69.</span>             <span class="n">List</span><span class="o">&lt;</span><span class="n">UserInfo</span><span class="o">&gt;</span> <span class="nb">list</span> <span class="o">=</span> <span class="n">service</span><span class="o">.</span><span class="n">findByProps</span><span class="p">(</span><span class="n">new</span> <span class="n">String</span><span class="p">[]</span> <span class="p">{</span> <span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="s2">&quot;age&quot;</span> <span class="p">},</span> <span class="n">new</span> <span class="n">Object</span><span class="p">[]</span> <span class="p">{</span> <span class="s2">&quot;张三&quot;</span><span class="p">,</span> <span class="mi">18</span> <span class="p">});</span>
+<span class="mf">70.</span>             <span class="k">for</span> <span class="p">(</span><span class="n">UserInfo</span> <span class="n">u</span> <span class="p">:</span> <span class="nb">list</span><span class="p">)</span> <span class="p">{</span>
+<span class="mf">71.</span>                 <span class="n">System</span><span class="o">.</span><span class="n">out</span><span class="o">.</span><span class="n">println</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">getName</span><span class="p">());</span>
+<span class="mf">72.</span>             <span class="p">}</span>
+<span class="mf">73.</span>         <span class="p">}</span>
+</pre></div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">Python</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="list1.html">NoSQL简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="list2.html">MongoDB简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="list3.html">安装MongoDB</a></li>
+<li class="toctree-l1"><a class="reference internal" href="list4.html">基本操作</a></li>
+<li class="toctree-l1"><a class="reference internal" href="list5.html">排序、索引、聚合</a></li>
+<li class="toctree-l1"><a class="reference internal" href="list6.html">引用和嵌入</a></li>
+<li class="toctree-l1"><a class="reference internal" href="list7.html">文件存入</a></li>
+<li class="toctree-l1"><a class="reference internal" href="list8.html">MongoDB JDBC</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">SpringData MongoDB</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="list8.html" title="previous chapter">MongoDB JDBC</a></li>
+      <li>Next: <a href="list10.html" title="next chapter">&lt;no title&gt;</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2017, lishuang.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+      |
+      <a href="_sources/list9.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
