@@ -3,26 +3,31 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-MongoDB讲述
+MongoDB 是一个基于分布式文件存储的数据库。由 C++ 语言编写。旨在为 WEB 应用提供可扩展的高性能数据存储解决方案。
+MongoDB 是一个介于关系数据库和非关系数据库之间的产品，是非关系数据库当中功能最丰富，最像关系数据库的。
 ===========
 
-内置数据类型
-----------------------
-和大多数动态语言一样，python中的变量是动态变量numbers(数字)
-+++++++++++++++
-
-数字的使用跟数学表达式一样:
-
-string(字符串)
-++++++++++++++++++++
-python通过单引号、双引号或三重引号引起来的表示字符串。
-
+参考地址
+-------
+MongoDB 官网地址：https://www.mongodb.com/
+MongoDB 官方英文文档：https://docs.mongodb.com/manual/
+MongoDB 各平台下载地址：https://www.mongodb.com/download-center#community
 Contents:
 
 .. toctree::
    :maxdepth: 2
 	
-    
+   list1 
+   list2  
+   list3   
+   list4    
+   list5     
+   list6      
+   list7      
+   list8        
+   list9         
+   list10         
+   list11  
 
 
 
