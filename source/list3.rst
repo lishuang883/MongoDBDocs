@@ -14,7 +14,7 @@
 ----
 创建数据目录
 
-MongoDB将数据目录存储在 db 文件夹下。但是这个数据目录不会主动创建，我们在安装完成后需要创建它。请注意，数据目录应该放在根目录下（(如： C:\ 或者 D:\ 等 )。创建一个data的文件夹，然后在data文件夹里创建db文件夹。
+MongoDB将数据目录存储在 db 文件夹下。但是这个数据目录不会主动创建，我们在安装完成后需要创建它。请注意，数据目录应该放在根目录下（(如： C:\\ 或者 D:\\ 等 )。创建一个data的文件夹，然后在data文件夹里创建db文件夹。
 
 为了从命令提示符（cmd）下运行 MongoDB 服务器，你必须从 MongoDB 目录的 bin 目录中执行 mongod.exe 文件。
 
@@ -48,15 +48,15 @@ MongoDB将数据目录存储在 db 文件夹下。但是这个数据目录不会
 
 将MongoDB设置成Windows服务
 --------------------------
-1. 在d:\mongodb\data下新建文件夹log（存放日志文件）并且新建文件mongodb.log
+1. 在d:\\mongodb\\data下新建文件夹log（存放日志文件）并且新建文件mongodb.log
 
-2. 在d:\mongodb新建文件mongo.config
+2. 在d:\\mongodb新建文件mongo.config
 	用记事本打开mongo.config输入：
 
 	dbpath=D:\\mongodb\\data\\db
 
 	logpath=D:\\mongodb\\data\\log\\mongodb.log 
-3. 用管理员身份打开cmd命令行，进入D:\mongodb\bin目录，输入如下的命令：
+3. 用管理员身份打开cmd命令行，进入D:\\mongodb\\bin目录，输入如下的命令：
 ::
  mongod --config D:\mongodb\mongo.config --install --serviceName "MongoDB"
 如图结果存放在日志文件中，查看日志发现已经成功。如果失败有可能没有使用管理员身份，遭到拒绝访问。
